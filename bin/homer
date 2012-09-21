@@ -1,20 +1,41 @@
 #!/usr/bin/env ruby
 
 require 'thor'
+require 'homer'
 
 class HomerRunner < Thor
 
   default_task :list
 
-  desc "list", "Lists your dotfiles"
-  def list
-    puts 'Dotfiles'
+  desc "wipe", "Removes ~/.homer folder"
+  def wipe
+    Homer.wipe
+  rescue Exception => e
+    puts "Error: #{e.message}"
   end
 
-  desc 'help', 'Prints help'
-  def help
-    puts 'Help'
+  desc "init", "Initializes homer. Creates ~/.homer folder"
+  def init
+    Homer.init
+  rescue Exception => e
+    puts "Error: #{e.message}"
   end
+
+  desc "add DOTFILE", "Start tracking a file"
+  def add(file)
+    Homer.add(file)
+  rescue Exception => e
+    puts "Error: #{e.message}"
+    puts "Did you forget to run 'homer init' after you installed Homer gem ?"
+  end
+
+  desc "list", "Lists your tracked dotfiles"
+  def list
+    puts Homer.list
+  rescue Exception => e
+    puts "Error: #{e.message}"
+  end
+
 end
 
 HomerRunner.start

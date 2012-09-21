@@ -29,5 +29,9 @@ class Homer
     f.close
   end
 
+  def self.list
+    File.read(dotfiles_path)
+  end
+
 end
 

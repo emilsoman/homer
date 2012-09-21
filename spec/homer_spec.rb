@@ -50,4 +50,18 @@ describe "Homer" do
       end
     end
   end
+
+  describe ".list" do
+    Homer.wipe
+    Homer.init
+    File.new(File.join(Dir.home, ".file_that_exists"), "w")
+    File.new(File.join(Dir.home, ".another_file_that_exists"), "w")
+    it "should list the contents of dotfiles" do
+      Homer.list.should include(File.join(Dir.home, ".file_that_exists"))
+      Homer.list.should include(File.join(Dir.home, ".another_file_that_exists"))
+    end
+    File.delete(File.join(Dir.home, ".file_that_exists"))
+    File.delete(File.join(Dir.home, ".another_file_that_exists"))
+  end
+
 end
