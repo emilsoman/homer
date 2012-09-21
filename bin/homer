@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require 'thor'
+
+class HomerRunner < Thor
+
+  default_task :list
+
+  desc "list", "Lists your dotfiles"
+  def list
+    puts 'Dotfiles'
+  end
+
+  desc 'help', 'Prints help'
+  def help
+    puts 'Help'
+  end
+end
+
+HomerRunner.start
