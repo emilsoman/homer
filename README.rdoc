@@ -1,6 +1,6 @@
 = homer
 
-Description goes here.
+Homer makes tracking your Unix dotfiles easay peasay
 
 == Contributing to homer
  
