@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Homer" do
+describe Homer do
   describe "initialize" do
     before (:each) do
       Homer.wipe
@@ -11,18 +11,6 @@ describe "Homer" do
     end
     it "should create an empty dotfiles file in ~/.homer" do
       File.zero?(ENV['HOME']+'/.homer/dotfiles').should be_true
-    end
-  end
-
-  describe "dotfiles_path" do
-    it "should return the dotfiles path" do
-      Homer.dotfiles_path.should == File.join(Dir.home, ".homer", "dotfiles") 
-    end
-  end
-
-  describe "root_path" do
-    it "should return the ~/.homer path" do
-      Homer.root_path.should == File.join(Dir.home, ".homer") 
     end
   end
 
@@ -43,8 +31,8 @@ describe "Homer" do
           Homer.add('~/.file_that_exists')
           Homer.add('~/.another_file_that_exists')
         end.not_to raise_error
-        File.read(Homer.dotfiles_path).should include(File.join(Dir.home, ".file_that_exists"))
-        File.read(Homer.dotfiles_path).should include(File.join(Dir.home, ".another_file_that_exists"))
+        File.read(FileLayer.dotfiles_path).should include(File.join(Dir.home, ".file_that_exists"))
+        File.read(FileLayer.dotfiles_path).should include(File.join(Dir.home, ".another_file_that_exists"))
         File.delete(File.join(Dir.home, ".file_that_exists"))
         File.delete(File.join(Dir.home, ".another_file_that_exists"))
       end

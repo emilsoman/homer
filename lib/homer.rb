@@ -1,36 +1,25 @@
-require 'fileutils'
+require 'homer/file_layer'
 
 class Homer
 
-  def self.init
-    Dir.mkdir(File.join(Dir.home, ".homer"))
-    File.new(dotfiles_path , "w")
-  rescue Exception => e
-    raise "~/.homer cannot be created : #{e.message}"
-  end
+  class << self
 
-  def self.dotfiles_path
-    return File.join(Dir.home, ".homer", "dotfiles")
-  end
+    def init
+      FileLayer.prepare_homer_folder
+    end
 
-  def self.root_path
-    return File.join(Dir.home, ".homer")
-  end
+    def wipe
+      FileLayer.delete_homer_folder
+    end
 
-  def self.wipe
-    FileUtils.rm_rf(File.join(Dir.home, ".homer"))
-  end
+    def add(dotfile)
+      FileLayer.add_filename_to_dotfiles(dotfile)
+    end
 
-  def self.add(dotfile)
-    dotfile = File.expand_path(dotfile)
-    f = File.open(dotfiles_path, "a")
-    raise "#{dotfile} does not exist." unless File.exists?(dotfile)
-    f.puts dotfile
-    f.close
-  end
+    def list
+      FileLayer.read_dotfiles
+    end
 
-  def self.list
-    File.read(dotfiles_path)
   end
 
 end
