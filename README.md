@@ -30,3 +30,6 @@ Need to pair program at co-worker's hostile box .
 - When friend complains after your display of awesomeness
 
         homer bye
+        
+## Wishlist
+- Use a table for listing tracked files and Symlinks ( Use [terminal table](https://github.com/visionmedia/terminal-table) ? )
