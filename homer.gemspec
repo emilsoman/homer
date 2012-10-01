@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Emil Soman"]
-  s.date = "2012-09-21"
-  s.description = "Homer makes tracking your Unix dotfiles easay peasay"
+  s.date = "2012-10-01"
+  s.description = "Homer makes tracking your Unix dotfiles easay peasay - UNDER DEVELOPMENT"
   s.email = "emil.soman@gmail.com"
   s.executables = ["homer"]
   s.extra_rdoc_files = [
@@ -28,7 +28,11 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "bin/homer",
+    "homer.gemspec",
     "lib/homer.rb",
+    "lib/homer/file_layer.rb",
+    "lib/homer/github_layer.rb",
+    "spec/github_layer_spec.rb",
     "spec/homer_spec.rb",
     "spec/spec_helper.rb"
   ]
@@ -36,7 +40,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.24"
-  s.summary = "Tracks your dotfiles with GitHub"
+  s.summary = "Homer makes tracking your Unix dotfiles easay peasay - UNDER DEVELOPMENT"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3

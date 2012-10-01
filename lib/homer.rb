@@ -1,4 +1,5 @@
 require 'homer/file_layer'
+require 'homer/symlink'
 
 class Homer
 
@@ -13,11 +14,11 @@ class Homer
     end
 
     def add(dotfile)
-      FileLayer.add_filename_to_dotfiles(dotfile)
+      SymLink.add(dotfile)
     end
 
     def list
-      FileLayer.read_dotfiles
+      SymLink.filenames
     end
 
   end

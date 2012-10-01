@@ -5,7 +5,7 @@ require 'homer'
 
 class HomerRunner < Thor
 
-  default_task :list
+  default_task :help
 
   desc "wipe", "Removes ~/.homer folder"
   def wipe
@@ -21,6 +21,13 @@ class HomerRunner < Thor
     puts "Error: #{e.message}"
   end
 
+  desc "list", "Lists your tracked dotfiles"
+  def list
+    puts Homer.list
+  rescue Exception => e
+    puts "Error: #{e.message}"
+  end
+
   desc "add DOTFILE", "Start tracking a file"
   def add(file)
     Homer.add(file)
@@ -29,9 +36,30 @@ class HomerRunner < Thor
     puts "Did you forget to run 'homer init' after you installed Homer gem ?"
   end
 
-  desc "list", "Lists your tracked dotfiles"
-  def list
-    puts Homer.list
+  desc "push", "Pushes your dotfiles to GitHub"
+  def push
+    puts "This should push the dotfiles folder to github"
+  rescue Exception => e
+    puts "Error: #{e.message}"
+  end
+
+  desc "hi", "Magically brings your dotfiles from GitHub so you can feel at home"
+  def hi
+    puts "This should take a backup of existing dotfiles, ask your github username and password and pull your dotfiles"
+  rescue Exception => e
+    puts "Error: #{e.message}"
+  end
+
+  desc "bye", "Self destructs leaving no trace behind"
+  def bye
+    puts "This should restore the dotfiles backup and delete the .homer folder"
+  rescue Exception => e
+    puts "Error: #{e.message}"
+  end
+
+  desc "restore", "Move back original files and remove symlinks"
+  def restore
+    puts "This should move back the original dotfiles and remove all symlinks"
   rescue Exception => e
     puts "Error: #{e.message}"
   end
