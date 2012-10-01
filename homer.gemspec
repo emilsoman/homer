@@ -32,6 +32,9 @@ Gem::Specification.new do |s|
     "lib/homer.rb",
     "lib/homer/file_layer.rb",
     "lib/homer/github_layer.rb",
+    "lib/homer/symlink.rb",
+    "lib/symlink.rb",
+    "spec/file_layer_spec.rb",
     "spec/github_layer_spec.rb",
     "spec/homer_spec.rb",
     "spec/spec_helper.rb"

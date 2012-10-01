@@ -14,6 +14,7 @@ class Homer
     end
 
     def add(dotfile)
+      FileLayer.prepare_homer_folder
       SymLink.add(dotfile)
     end
 

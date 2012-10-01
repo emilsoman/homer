@@ -26,7 +26,6 @@ class FileLayer
     end 
 
     def add_filename_to_dotfiles(dotfile)
-      prepare_homer_folder
       dotfile = File.expand_path(dotfile)
       f = File.open(dotfiles_path, "a")
       raise "#{dotfile} does not exist." unless File.exists?(dotfile)
