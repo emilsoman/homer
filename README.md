@@ -3,7 +3,7 @@
 
 Homer makes tracking your Unix dotfiles easay peasay
 
--Currently under development and not yet available -
+-Currently under initial development . IT IS DANGEROUS to use it , till this line is gone! -
 
 ## Installation
 
