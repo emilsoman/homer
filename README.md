@@ -10,9 +10,6 @@ Homer makes tracking your Unix dotfiles easay peasay
     gem install homer
 ## Usage
 
-- Initialize homer :
-
-        homer init
 - Start tracking dotfiles :
 
         homer add ~/.vimrc
