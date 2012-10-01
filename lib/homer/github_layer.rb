@@ -5,6 +5,9 @@ Github::Authorizations::VALID_AUTH_PARAM_NAMES = Github::Authorizations::VALID_A
 class GitHubLayer
   class << self
 
+    def push
+    end
+
     def login(login, password)
       github = Github.new(login: login, password: password)
       authorization = github.oauth.create(scopes: ['public_repo'], note: 'Homer')

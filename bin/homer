@@ -39,6 +39,7 @@ class HomerRunner < Thor
   desc "push", "Pushes your dotfiles to GitHub"
   def push
     puts "This should push the dotfiles folder to github"
+    GitHubLayer.push
   rescue Exception => e
     puts "Error: #{e.message}"
   end
