@@ -92,8 +92,8 @@ class FileLayer
     def create_current_symlink(room)
       File.symlink(room, current_room_path)
       symlinks = read_yml_file(current_room_dotfiles_path)
-      symlinks.each do |file, symlink|
-        add_backup(File.expand_path(symlink))
+      symlinks.each do |generic_file_path, file|
+        add_backup(File.expand_path(generic_file_path))
         File.symlink(File.join(current_room_path,'dotfiles', file), File.expand_path(symlink))
       end
     end
@@ -105,24 +105,25 @@ class FileLayer
       backup_file_path = File.exists?(backup_file_path) ? backup_file_path + Time.now.to_i.to_s : backup_file_path
       backup_list = read_backup_list
       if File.symlink?(file_path)
-        backup_list[backup_file_path] = {target_path: File.readlink(file_path), link_path: file_path }
+        backup_list[file_path] = {target_path: File.readlink(file_path), link_path: file_path }
+        File.unlink(file_path)
       else
-        backup_list[backup_file_path] = {target_path: file_path}
+        backup_list[file_path] = {target_path: backup_file_path}
+        FileUtils.mv(file_path, backup_file_path)
       end
-      FileUtils.mv(file_path, backup_file_path)
       save_backup_list(backup_list)
     end
 
     #Restores the files stored in backup_path
     def restore_backup
       backup_list = read_backup_list
-      backup_list.each do |file, file_details|
-        file_path_in_backup_folder = File.join(backup_path, file)
+      backup_list.each do |file_path, file_details|
         if file_details[:is_symlink]
-          File.unlink(file_details[:link_path])
+          File.unlink(file_details[:link_path]) if File.exists?(file_details[:link_path])
           File.symlink(file_details[:target_path], file_details[:link_path])
         else
-          FileUtils.mv(file_path_in_backup_folder, file_details[:target_path])
+          file_path_in_backup_folder = File.join(backup_path, file_details[:target_path])
+          FileUtils.mv(file_path_in_backup_folder, file_path])
         end
       end
     end

@@ -38,6 +38,7 @@ class GitHubLayer
 
     def get_dotfiles(login)
       if !system("git clone git@github.com:#{login}/#{REPO_NAME}.git 2> /dev/null")
+        Dir.chdir(File.expand_path(REPO_NAME))
         %x{git pull origin master 2> /dev/null}
       end
     end

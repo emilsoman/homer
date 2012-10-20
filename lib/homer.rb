@@ -21,7 +21,7 @@ class Homer
     end
 
     def list
-      SymLink.filenames
+      SymLink.file_paths
     end
 
     def push
@@ -37,7 +37,6 @@ class Homer
       puts "Getting all your dotfiles"
       GitHubLayer.get_dotfiles(login)
       puts "Getting your room ready"
-      require 'debugger'; debugger
       use(room)
       puts "Done! Be at home , #{login}"
     end
