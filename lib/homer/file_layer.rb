@@ -94,19 +94,20 @@ class FileLayer
       symlinks = read_yml_file(current_room_dotfiles_path)
       symlinks.each do |generic_file_path, file|
         add_backup(File.expand_path(generic_file_path))
-        File.symlink(File.join(current_room_path,'dotfiles', file), File.expand_path(symlink))
+        File.symlink(File.join(current_room_path,'dotfiles', file), File.expand_path(generic_file_path))
       end
     end
 
     #Moves file to backup_dir
     def add_backup(file_path)
+      return if !File.exists?(file_path)
       FileUtils.mkdir_p(backup_path) unless File.exists?(backup_path)
       backup_file_path = File.join(backup_path, File.basename(file_path))
       backup_file_path = File.exists?(backup_file_path) ? backup_file_path + Time.now.to_i.to_s : backup_file_path
       backup_list = read_backup_list
       if File.symlink?(file_path)
         backup_list[file_path] = {target_path: File.readlink(file_path), link_path: file_path }
-        File.unlink(file_path)
+        File.unlink(file_path) if File.exists?(file_path)
       else
         backup_list[file_path] = {target_path: backup_file_path}
         FileUtils.mv(file_path, backup_file_path)
