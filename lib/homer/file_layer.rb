@@ -94,22 +94,9 @@ class FileLayer
       symlinks = read_yml_file(current_room_dotfiles_path)
       symlinks.each do |file, symlink|
         add_backup(File.expand_path(symlink))
-	require 'debugger'
-	debugger
-        File.symlink(File.join(current_room_path, file), File.expand_path(symlink))
+        File.symlink(File.join(current_room_path,'dotfiles', file), File.expand_path(symlink))
       end
     end
-
-=begin
-    #Deletes file if symlink , else moves to backup
-    def backup(file)
-      if File.symlink?(symlink_path)
-        File.unlink(symlink_path)
-      else 
-        add_backup(symlink_path)
-      end
-    end
-=end
 
     #Moves file to backup_dir
     def add_backup(file_path)
