@@ -16,13 +16,7 @@ describe FileLayer do
 
   describe ".dotfiles_path" do
     it "should return the path to dotfiles_list" do
-      FileLayer.dotfiles_path.should == File.join(Dir.home, ".homer", "dotfiles", "dotfiles_list") 
-    end
-  end
-
-  describe ".token_path" do
-    it "should return the path to file where GitHub token is saved" do
-      FileLayer.token_path.should == File.join(Dir.home, ".homer", "token") 
+      FileLayer.dotfiles_path.should == File.join(Dir.home, ".homer", "dotfiles", "dotfiles_list.yml") 
     end
   end
 
@@ -32,12 +26,4 @@ describe FileLayer do
     end
   end
 
-  describe ".save_authorization_token" do
-    it "should store token into token file" do
-      Homer.init
-      FileLayer.save_authorization_token("abc")
-      Homer.wipe
-    end
-  end
-  
 end

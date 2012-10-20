@@ -1,4 +1,5 @@
 require 'homer/file_layer'
+require 'homer/github_layer'
 require 'homer/symlink'
 
 class Homer
@@ -20,6 +21,11 @@ class Homer
 
     def list
       SymLink.filenames
+    end
+
+    def push
+      dotfiles_dir = FileLayer.dotfiles_directory_path
+      GitHubLayer.push(dotfiles_dir)
     end
 
   end

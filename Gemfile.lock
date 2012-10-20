@@ -12,6 +12,7 @@ GEM
       nokogiri (~> 1.5.2)
       oauth2
     hashie (1.2.0)
+    highline (1.6.15)
     httpauth (0.1)
     jeweler (1.8.4)
       bundler (~> 1.0)
@@ -44,6 +45,7 @@ PLATFORMS
 DEPENDENCIES
   bundler
   github_api
+  highline
   jeweler (~> 1.8.4)
   rdoc (~> 3.12)
   rspec

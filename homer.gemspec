@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Emil Soman"]
-  s.date = "2012-10-01"
+  s.date = "2012-10-20"
   s.description = "Homer makes tracking your Unix dotfiles easay peasay - UNDER DEVELOPMENT"
   s.email = "emil.soman@gmail.com"
   s.executables = ["homer"]
@@ -51,6 +51,7 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<github_api>, [">= 0"])
+      s.add_runtime_dependency(%q<highline>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 0"])
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
@@ -58,6 +59,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<jeweler>, ["~> 1.8.4"])
     else
       s.add_dependency(%q<github_api>, [">= 0"])
+      s.add_dependency(%q<highline>, [">= 0"])
       s.add_dependency(%q<rspec>, [">= 0"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_dependency(%q<bundler>, [">= 0"])
@@ -66,6 +68,7 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<github_api>, [">= 0"])
+    s.add_dependency(%q<highline>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 0"])
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
     s.add_dependency(%q<bundler>, [">= 0"])

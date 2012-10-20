@@ -13,7 +13,7 @@ describe Homer do
       Dir.exists?(File.join(Dir.home,'.homer/dotfiles')).should be_true
     end
     it "should create an empty dotfiles file in ~/.homer" do
-      File.zero?(File.join(Dir.home,'.homer/dotfiles/dotfiles_list')).should be_true
+      File.zero?(File.join(Dir.home,'.homer/dotfiles/dotfiles_list.yml')).should be_true
     end
   end
 
@@ -23,7 +23,6 @@ describe Homer do
         expect do
           Homer.add('~/.file_that_does_not_exist')
         end.to raise_error("#{ENV['HOME']}/.file_that_does_not_exist does not exist.")
-        #File.read(Homer.dotfiles_path).should include(File.join(Dir.home, ".file_that_does_not_exist"))
       end
     end
     context "when dotfile exists" do

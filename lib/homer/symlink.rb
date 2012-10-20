@@ -1,10 +1,13 @@
 class SymLink
 
+  #Returns all files in dotfiles_list
   def self.filenames
     symlinks = FileLayer.read_symlink_file
     symlinks.keys
   end
 
+  #Adds file to dotfiles_list , moves the file to dotfiles folder 
+  #and creates a symlink with original filepath 
   def self.add(dotfile)
     dotfile = File.expand_path(dotfile)
     raise "#{dotfile} does not exist." unless File.exists?(dotfile)
@@ -17,6 +20,8 @@ class SymLink
   end
 
   private
+
+    #Gets the next unused filename by adding an integer suffix to filename
     def self.get_unused_filename(filename, existing_filenames)
       filename_to_store = filename
       count = 1

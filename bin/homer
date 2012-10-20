@@ -7,7 +7,7 @@ class HomerRunner < Thor
 
   default_task :help
 
-  desc "wipe", "Removes ~/.homer folder. WARNING : THIS IS DANGEROUS . Have a sip of Green Tea and ask yourself why you are doing this"
+  desc "wipe", "Removes ~/.homer folder. WARNING : THIS IS DANGEROUS"
   def wipe
     Homer.wipe
   rescue Exception => e
@@ -38,8 +38,7 @@ class HomerRunner < Thor
 
   desc "push", "Pushes your dotfiles to GitHub"
   def push
-    puts "This should push the dotfiles folder to github"
-    GitHubLayer.push
+    Homer.push
   rescue Exception => e
     puts "Error: #{e.message}"
   end

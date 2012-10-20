@@ -1,29 +1,38 @@
 require 'github_api'
 require 'homer/file_layer'
-Github::Authorizations::VALID_AUTH_PARAM_NAMES = Github::Authorizations::VALID_AUTH_PARAM_NAMES + ["note"]
+require 'highline/import'
 
 class GitHubLayer
+  REPO_NAME = 'dotfiles'
   class << self
 
-    def push
+    def push(directory)
+      create_repo_if_repo_does_not_exist(directory)
+      %x{git pull origin master}
+      %x{git add .}
+      %x{git commit -m "Homer push"}
+      %x{git push origin master}
     end
 
-    def login(login, password)
+    def create_repo_if_repo_does_not_exist(directory)
+      Dir.chdir(directory)
+      return if origin_added_as_remote?
+      puts "I need your GitHub login to create a '#{REPO_NAME}' repo if it doesn't exist already"
+      login = ask("Login: ")
+      password = ask("Password: ") { |q| q.echo = false } 
       github = Github.new(login: login, password: password)
-      authorization = github.oauth.create(scopes: ['public_repo'], note: 'Homer')
-      FileLayer.save_authorization_token(authorization.token)
-    rescue Github::Error::Unauthorized
-      raise "Invalid GitHub Login/Password"
+      begin
+        github.repos.get(github.login, REPO_NAME)
+      rescue Github::Error::NotFound
+        github.repos.create(name: REPO_NAME)
+      end
+      %x{git init .}
+      %x{git remote add origin git@github.com:#{login}/#{REPO_NAME}.git}
     end
 
-    def create_repo_if_repo_does_not_exist(repo_name)
-      token = FileLayer.read_authorization_token  
-      github = Github.new(oauth_token: token)
-      begin
-        github.repos.get(github.login, repo_name)
-      rescue Github::Error::NotFound
-        github.repos.create(name: repo_name)
-      end
+    def origin_added_as_remote?
+      remotes = %x{git remote -v}
+      return remotes.include?("origin\t")
     end
 
   end
