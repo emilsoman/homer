@@ -7,7 +7,8 @@ class Homer
   class << self
 
     def init
-      FileLayer.prepare_homer_folder
+      FileLayer.init
+      GitHubLayer.init(FileLayer.dotfiles_directory_path)
     end
 
     def wipe

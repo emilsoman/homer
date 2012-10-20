@@ -16,6 +16,15 @@ class FileLayer
       raise "~/.homer cannot be created : #{e.message}"
     end
 
+    #Creates the homer root directory if it does not exist already
+    #Creates the dotfiles directory if it does not exist already
+    def init
+      Dir.mkdir(root_path) unless Dir.exists?(root_path)
+      Dir.mkdir(dotfiles_directory_path) unless Dir.exists?(dotfiles_directory_path)
+    rescue Exception => e
+      raise "~/.homer cannot be created : #{e.message}"
+    end
+
     #Makes a directory for the given GitHub login
     def make_room(login)
       FileUtils.mkdir_p(room_path(login)) unless Dir.exists?(room_path(login))
@@ -85,7 +94,9 @@ class FileLayer
       symlinks = read_yml_file(current_room_dotfiles_path)
       symlinks.each do |file, symlink|
         add_backup(File.expand_path(symlink))
-        File.symlink(file, File.expand_path(symlink))
+	require 'debugger'
+	debugger
+        File.symlink(File.join(current_room_path, file), File.expand_path(symlink))
       end
     end
 

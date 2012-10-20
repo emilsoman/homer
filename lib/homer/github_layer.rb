@@ -6,11 +6,16 @@ class GitHubLayer
   REPO_NAME = 'dotfiles'
   class << self
 
-    def push(directory)
+    def init(directory)
       create_repo_if_repo_does_not_exist(directory)
       %x{git pull origin master}
+    end
+
+    def push(directory)
+      create_repo_if_repo_does_not_exist(directory)
       %x{git add .}
       %x{git commit -m "Homer push"}
+      %x{git pull origin master}
       %x{git push origin master}
     end
 
@@ -20,6 +25,7 @@ class GitHubLayer
       puts "I need your GitHub login to create a '#{REPO_NAME}' repo if it doesn't exist already"
       login = ask("Login: ")
       password = ask("Password: ") { |q| q.echo = false } 
+      puts "Connecting to GitHub. Please Wait"
       github = Github.new(login: login, password: password)
       begin
         github.repos.get(github.login, REPO_NAME)
@@ -37,7 +43,7 @@ class GitHubLayer
     end
 
     def origin_added_as_remote?
-      remotes = %x{git remote -v}
+      remotes = %x{git remote -v 2> /dev/null}
       return remotes.include?("origin\t")
     end
 
