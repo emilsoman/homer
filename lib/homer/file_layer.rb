@@ -123,7 +123,7 @@ class FileLayer
           File.symlink(file_details[:target_path], file_details[:link_path])
         else
           file_path_in_backup_folder = File.join(backup_path, file_details[:target_path])
-          FileUtils.mv(file_path_in_backup_folder, file_path])
+          FileUtils.mv(file_path_in_backup_folder, file_path)
         end
       end
     end

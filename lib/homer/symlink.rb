@@ -28,6 +28,7 @@ class SymLink
       puts "I am already tracking this file. Do you want to overwrite it ?"
       confirm = ask("y/n: ")
       return if confirm.downcase.include?("n")
+      filename_to_store = symlinks[FileLayer.get_generic_home_relative_path(dotfile)]
     end
     symlinks[FileLayer.get_generic_home_relative_path(dotfile)] = filename_to_store
     FileLayer.save_symlink_file(symlinks)
