@@ -43,9 +43,10 @@ class HomerRunner < Thor
     puts "Error: #{e.message}"
   end
 
-  desc "hi", "Magically brings your dotfiles from GitHub so you can feel at home"
-  def hi
-    puts "This should take a backup of existing dotfiles, ask your github username and password and pull your dotfiles"
+  desc "hi GITHUB_USERNAME", "Magically brings your dotfiles from GitHub so you can feel at home"
+  def hi(github_login)
+    puts "This should take a backup of existing dotfiles, ask your github username and pull your dotfiles"
+    Homer.hi(github_login)
   rescue Exception => e
     puts "Error: #{e.message}"
   end

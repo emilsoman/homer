@@ -30,6 +30,12 @@ class GitHubLayer
       %x{git remote add origin git@github.com:#{login}/#{REPO_NAME}.git}
     end
 
+    def get_dotfiles(login)
+      if !system("git clone git@github.com:#{login}/#{REPO_NAME}.git 2> /dev/null")
+        %x{git pull origin master 2> /dev/null}
+      end
+    end
+
     def origin_added_as_remote?
       remotes = %x{git remote -v}
       return remotes.include?("origin\t")

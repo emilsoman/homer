@@ -28,6 +28,28 @@ class Homer
       GitHubLayer.push(dotfiles_dir)
     end
 
+    def hi(login)
+      puts "Hi #{login}"
+      room = FileLayer.make_room(login)
+      puts "Your room is here : #{room}"
+      Dir.chdir(room)
+      puts "Getting all your dotfiles"
+      GitHubLayer.get_dotfiles(login)
+      puts "Getting your room ready"
+      require 'debugger'; debugger
+      use(room)
+      puts "Done! Be at home , #{login}"
+    end
+
+    def use(room)
+      bye
+      FileLayer.create_current_symlink(room)
+    end
+
+    def bye
+      FileLayer.delete_current_symlinks
+      FileLayer.restore_backup
+    end
   end
 
 end
