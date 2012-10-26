@@ -14,3 +14,7 @@ group :development do
   gem "github_api"
   gem "jeweler", "~> 1.8.4"
 end
+
+group :test do
+  gem "fakefs"
+end

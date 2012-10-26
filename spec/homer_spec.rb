@@ -1,59 +1,61 @@
 require 'spec_helper'
 
 describe Homer do
-  describe "initialize" do
-    before (:each) do
-      Homer.wipe
+  describe ".init" do
+    it "should call FileLayer and GitHubLayer init" do
+      FileLayer.should_receive(:init).with no_args
+      FileLayer.stub(:dotfiles_directory_path).and_return('dotfiles_directory_path')
+      GitHubLayer.should_receive(:init).with('dotfiles_directory_path')
       Homer.init
-    end
-    it "should create a .homer folder in home directory" do
-      Dir.exists?(File.join(Dir.home, '.homer')).should be_true
-    end
-    it "should create a .homer folder in home directory" do
-      Dir.exists?(File.join(Dir.home,'.homer/dotfiles')).should be_true
-    end
-    it "should create an empty dotfiles file in ~/.homer" do
-      File.zero?(File.join(Dir.home,'.homer/dotfiles/dotfiles_list.yml')).should be_true
     end
   end
 
-  describe "adding a dotfile" do
-    context "when dotfile doesnt exist" do
-      it "should raise error when dotfile does not exist" do
-        expect do
-          Homer.add('~/.file_that_does_not_exist')
-        end.to raise_error("#{ENV['HOME']}/.file_that_does_not_exist does not exist.")
-      end
-    end
-    context "when dotfile exists" do
-      it "should raise error when dotfile does not exist" do
-        File.new("/tmp/.file_that_exists", "w")
-        File.new("/tmp/.another_file_that_exists", "w")
-        expect do
-          Homer.add('/tmp/.file_that_exists')
-          Homer.add('/tmp/.another_file_that_exists')
-        end.not_to raise_error
-        YAML.load_file(FileLayer.dotfiles_path).should == {".file_that_exists" => '/tmp/.file_that_exists', ".another_file_that_exists" => '/tmp/.another_file_that_exists'}
-        File.delete(File.join(Dir.home, ".file_that_exists"))
-        File.delete(File.join(Dir.home, ".another_file_that_exists"))
-        Homer.wipe
-      end
+  describe ".add" do
+    it "should call Symlink add" do
+      SymLink.should_receive(:add).with('dotfile')
+      Homer.add('dotfile')
     end
   end
 
   describe ".list" do
-    it "should list the contents of dotfiles" do
-      Homer.wipe
-      Homer.init
-      File.new(File.join(Dir.home, ".file_that_exists"), "w")
-      File.new(File.join(Dir.home, ".another_file_that_exists"), "w")
-      Homer.add(File.join(Dir.home, ".file_that_exists"))
-      Homer.add(File.join(Dir.home, ".another_file_that_exists"))
-      Homer.list.should include(".file_that_exists")
-      Homer.list.should include(".another_file_that_exists")
-      File.delete(File.join(Dir.home, ".file_that_exists"))
-      File.delete(File.join(Dir.home, ".another_file_that_exists"))
-      Homer.wipe
+    it "should call SymLink file_paths" do
+      SymLink.should_receive(:file_paths)
+      Homer.list
+    end
+  end
+
+  describe ".push" do
+    it "should call GitHubLayer push with dotfiles directory" do
+      FileLayer.should_receive(:dotfiles_directory_path).and_return('dotfiles_dir_path')
+      GitHubLayer.should_receive(:push).with('dotfiles_dir_path')
+      Homer.push
+    end
+  end
+
+  describe ".hi" do
+    it "should make room for login, use GitHubLayer to pull dotfiles and use the room" do
+      Homer.stub(:puts)
+      FileLayer.should_receive(:make_room).with('login').and_return('room')
+      Dir.should_receive(:chdir).with('room')
+      GitHubLayer.should_receive(:get_dotfiles).with('login')
+      Homer.should_receive(:use).with('room')
+      Homer.hi('login')
+    end
+  end
+
+  describe ".use" do
+    it "should say bye to current user, FileLayer should create current symlinks" do
+      FileLayer.should_receive(:create_current_symlink).with('room')
+      Homer.should_receive(:bye)
+      Homer.use('room')
+    end
+  end
+
+  describe ".bye" do
+    it "should make FileLayer delete current symlinks and restore backups" do
+      FileLayer.should_receive(:delete_current_symlinks)
+      FileLayer.should_receive(:restore_backup)
+      Homer.bye
     end
   end
 

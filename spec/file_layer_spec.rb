@@ -1,10 +1,54 @@
 require 'spec_helper'
 
 describe FileLayer do
+
+  describe ".init" do
+    let(:root_path) {FileLayer.root_path}
+    let(:dotfiles_directory_path) {FileLayer.dotfiles_directory_path}
+    context "when root_path exists" do
+      it "should do nothing" do
+        Dir.mkdir(root_path)
+        Dir.exists?(root_path).should be_true
+        modification_time = File.mtime(root_path)
+        FileLayer.init
+        File.mtime(root_path).to_i.should == modification_time.to_i
+      end
+    end
+    context "when root_path does not exist" do
+      it "should create root_path" do
+        Dir.exists?(root_path).should be_false
+        FileLayer.init
+        Dir.exists?(root_path).should be_true
+      end
+    end
+
+    context "when dotfiles_directory_path exists" do
+      it "should do nothing" do
+        Dir.mkdir(dotfiles_directory_path)
+        Dir.exists?(dotfiles_directory_path).should be_true
+        modification_time = File.mtime(dotfiles_directory_path)
+        FileLayer.init
+        File.mtime(dotfiles_directory_path).to_i.should == modification_time.to_i
+      end
+    end
+    context "when dotfiles_directory_path does not exist" do
+      it "should create dotfiles_directory_path" do
+        Dir.exists?(dotfiles_directory_path).should be_false
+        FileLayer.init
+        Dir.exists?(dotfiles_directory_path).should be_true
+      end
+    end
+    
+  end
+
   describe ".get_generic_home_relative_path" do
     it "should replace /home/xyz/ with ~/" do
-      file_path = "/home/emil/somefolder/subfolder/.dotfile"
+      file_path = File.join( Dir.home, '/somefolder/subfolder/.dotfile')
       FileLayer.get_generic_home_relative_path(file_path).should == "~/somefolder/subfolder/.dotfile"
+    end
+    it "should replace /home/xyz/home/xyz with ~/home/xyz" do
+      file_path = File.join( Dir.home, Dir.home ,'/somefolder/subfolder/.dotfile')
+      FileLayer.get_generic_home_relative_path(file_path).should == "~#{Dir.home}/somefolder/subfolder/.dotfile"
     end
   end
 

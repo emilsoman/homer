@@ -8,15 +8,15 @@ class GitHubLayer
 
     def init(directory)
       create_repo_if_repo_does_not_exist(directory)
-      %x{git pull origin master 2> /dev/null}
+      system('git pull origin master 2> /dev/null')
     end
 
     def push(directory)
       create_repo_if_repo_does_not_exist(directory)
-      %x{git add .}
-      %x{git commit -m "Homer push"}
-      %x{git pull origin master 2> /dev/null}
-      %x{git push origin master 2> /dev/null}
+      system('git add .')
+      system('git commit -m "Homer push"')
+      system('git pull origin master 2> /dev/null')
+      system('git push origin master 2> /dev/null')
     end
 
     def create_repo_if_repo_does_not_exist(directory)

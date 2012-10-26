@@ -12,11 +12,12 @@ class Homer
     end
 
     def wipe
-      FileLayer.delete_homer_folder
+      puts "Real functionality is too dangerous to be a release candidate for now . ;)"
+      #FileLayer.delete_homer_folder
     end
 
     def add(dotfile)
-      FileLayer.prepare_homer_folder
+      #FileLayer.prepare_homer_folder
       SymLink.add(dotfile)
     end
 
@@ -53,4 +54,3 @@ class Homer
   end
 
 end
-

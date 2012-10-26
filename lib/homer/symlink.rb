@@ -1,11 +1,5 @@
 class SymLink
 
-  #Returns all files in dotfiles_list
-  def self.filenames
-    symlinks = FileLayer.read_symlink_file
-    symlinks.keys
-  end
-
   def self.file_paths
     symlinks = FileLayer.read_symlink_file
     symlinks.keys

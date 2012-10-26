@@ -5,6 +5,7 @@ require 'yaml'
 class FileLayer
   class << self
 
+=begin
     #Creates the homer root directory if it does not exist already
     #Creates the dotfiles directory if it does not exist already
     #Creates a dotfiles list YML file if it does not exist already
@@ -15,22 +16,19 @@ class FileLayer
     rescue Exception => e
       raise "~/.homer cannot be created : #{e.message}"
     end
+=end
 
     #Creates the homer root directory if it does not exist already
     #Creates the dotfiles directory if it does not exist already
     def init
       Dir.mkdir(root_path) unless Dir.exists?(root_path)
       Dir.mkdir(dotfiles_directory_path) unless Dir.exists?(dotfiles_directory_path)
-    rescue Exception => e
-      raise "~/.homer cannot be created : #{e.message}"
     end
 
     #Makes a directory for the given GitHub login
     def make_room(login)
       FileUtils.mkdir_p(room_path(login)) unless Dir.exists?(room_path(login))
       return room_path(login)
-    rescue Exception => e
-      raise "~/.homer cannot be created : #{e.message}"
     end
 
     #Deletes the homer root
