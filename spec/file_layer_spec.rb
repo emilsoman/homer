@@ -41,17 +41,6 @@ describe FileLayer do
     
   end
 
-  describe ".get_generic_home_relative_path" do
-    it "should replace /home/xyz/ with ~/" do
-      file_path = File.join( Dir.home, '/somefolder/subfolder/.dotfile')
-      FileLayer.get_generic_home_relative_path(file_path).should == "~/somefolder/subfolder/.dotfile"
-    end
-    it "should replace /home/xyz/home/xyz with ~/home/xyz" do
-      file_path = File.join( Dir.home, Dir.home ,'/somefolder/subfolder/.dotfile')
-      FileLayer.get_generic_home_relative_path(file_path).should == "~#{Dir.home}/somefolder/subfolder/.dotfile"
-    end
-  end
-
   describe ".root_path" do
     it "should return the root folder for homer to store meta info" do
       FileLayer.root_path.should == File.join(Dir.home, ".homer") 
@@ -67,6 +56,47 @@ describe FileLayer do
   describe ".dotfiles_directory_path" do
     it "should return the path to folder which will be pushed to GitHub" do
       FileLayer.dotfiles_directory_path.should == File.join(Dir.home, ".homer", "dotfiles/") 
+    end
+  end
+
+  describe ".room_path" do
+    it "should return the path to folder which will be used for github login" do
+      FileLayer.room_path('login').should == File.join(FileLayer.root_path, "room/login") 
+    end
+  end
+
+  describe ".current_room_path" do
+    it "should return the path to folder which will be used for current user" do
+      FileLayer.current_room_path.should == File.join(FileLayer.root_path, "current") 
+    end
+  end
+
+  describe ".current_room_dotfiles_path" do
+    it "should return the path to dotfiles list for current user" do
+      FileLayer.current_room_dotfiles_path.should == File.join(FileLayer.current_room_path, "dotfiles/dotfiles_list.yml") 
+    end
+  end
+
+  describe ".backup_path" do
+    it "should return the path to folder where backup is stored" do
+      FileLayer.backup_path.should == File.join(FileLayer.root_path, "backup") 
+    end
+  end
+
+  describe ".backup_list_path" do
+    it "should return the path to list of backup files" do
+      FileLayer.backup_list_path.should == File.join(FileLayer.backup_path, "backup_list.yml") 
+    end
+  end
+
+  describe ".get_generic_home_relative_path" do
+    it "should replace /home/xyz/ with ~/" do
+      file_path = File.join( Dir.home, '/somefolder/subfolder/.dotfile')
+      FileLayer.get_generic_home_relative_path(file_path).should == "~/somefolder/subfolder/.dotfile"
+    end
+    it "should replace /home/xyz/home/xyz with ~/home/xyz" do
+      file_path = File.join( Dir.home, Dir.home ,'/somefolder/subfolder/.dotfile')
+      FileLayer.get_generic_home_relative_path(file_path).should == "~#{Dir.home}/somefolder/subfolder/.dotfile"
     end
   end
 
