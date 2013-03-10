@@ -5,11 +5,11 @@ class Homerfile
   end
 
   def init
-    puts "We'll add some dotfiles to #{@path} and get you started\n"
-          + "Example: To start tracking /home/username/.bash_aliases, enter the following details -\n"
-          + "\tFilename: bash_aliases\n"
-          + "\tHome relative path: ~/.bash_aliases\n"
-          + "Alright. Let's do this."
+    puts "We'll add some dotfiles to #{@path} and get you started\n"\
+          "Example: To start tracking /home/username/.bash_aliases, enter the following details -\n"\
+          "\tFilename: bash_aliases\n"\
+          "\tHome relative path: ~/.bash_aliases\n"\
+          "Alright. Let's do this."
     begin
       filename = ask("Filename: ")
       filepath = ask("Home relative path: ~/")
