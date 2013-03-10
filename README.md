@@ -6,7 +6,8 @@ Homer makes tracking your Unix dotfiles easay peasay
 master branch : [![Build Status](https://travis-ci.org/emilsoman/homer.png?branch=master)](https://travis-ci.org/emilsoman/homer)  
 refactor branch : [![Build Status](https://travis-ci.org/emilsoman/homer.png?branch=refactor)](https://travis-ci.org/emilsoman/homer)
 
-*Under development. Risky to use till this line is gone*
+## *Under development. Risky to use till this line is gone*
+
 
 ## Installation
 
