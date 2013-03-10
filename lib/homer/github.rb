@@ -3,7 +3,7 @@ class GitHub
   def initialize(github_username, repo_name)
     @username = github_username
     @repo_name = repo_name
-    @repo = "https://github.com/#{github_username}/#{repo_name}.git"
+    @repo = "git@github.com:#{github_username}/#{repo_name}.git"
   end
 
   def create_repo(password)
@@ -11,7 +11,7 @@ class GitHub
     begin
       github.repos.create(name: @repo_name)
     rescue Github::Error::UnprocessableEntity
-      raise "Repository - '#{@repo_name}' already exists under '#{@username}'"
+      puts "Repository - '#{@repo_name}' already exists under '#{@username}', we'll see if we can use that."
     end
   end
 

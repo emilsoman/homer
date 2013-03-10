@@ -15,6 +15,7 @@ describe Homer do
         GitHub.should_receive(:new).with(username, repo_name).and_return(github)
         github.should_receive(:create_repo).with(password)
         Homer.should_receive(:setup_user).with(username, repo_name)
+        Homer.stub(:say)
         Homer.init
       end
     end
@@ -25,6 +26,7 @@ describe Homer do
         Homer.should_receive(:agree).with("Do you have a dotfiles repository on GitHub already? ").and_return(true)
         Homer.should_receive(:ask).with("What's the repository's name? ").and_return(repo_name)
         Homer.should_receive(:setup_user).with(username, repo_name)
+        Homer.stub(:say)
         Homer.init
       end
     end

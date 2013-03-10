@@ -5,21 +5,23 @@ class Homerfile
   end
 
   def init
-    puts "We'll add some dotfiles to #{@path} and get you started\n"\
+    File.new(@path, "w")
+    puts "========================================================="
+    puts "\nWe'll add some dotfiles to #{@path} and get you started\n"\
           "Example: To start tracking /home/username/.bash_aliases, enter the following details -\n"\
           "\tFilename: bash_aliases\n"\
           "\tHome relative path: ~/.bash_aliases\n"\
-          "Alright. Let's do this."
+          "Alright. Let's do this.\n\n"
+    puts "========================================================="
     begin
       filename = ask("Filename: ")
-      filepath = ask("Home relative path: ~/")
-      filepath = "~/" + filepath
+      filepath = ask("Home relative path: ")
       add_dotfile(filename, filepath)
     end while agree("Add another dotfile?")
   end
 
   def load
-    @dotfiles = YAML.load_file(@path)
+    @dotfiles = YAML.load_file(@path) rescue {}
   end
 
   def valid?
@@ -41,8 +43,13 @@ class Homerfile
   def add_dotfile(filename, file_path)
     load
     @dotfiles ||= {}
-    @dotfiles[filename] = file_path
-    save
+    begin
+      FileUtils.mv(File.expand_path(file_path), File.join(File.dirname(@path), File.basename(file_path)))
+      @dotfiles[filename] = file_path
+      save
+    rescue Exception => e
+      say("<%= color('#{file_path} can\\'t tracked. Make sure it exists and it\\'s not a symlink.', :red) %>")
+    end
   end
 
   def save

@@ -20,6 +20,7 @@ class Homer
         github.create_repo(password)
       end
       setup_user(github_username, repo_name)
+      say("<%= color('Your dotfiles have been added to homer and pushed to GitHub!', :green) %>!")
       #FileLayer.init
       #GitHubLayer.init(FileLayer.dotfiles_directory_path)
     end

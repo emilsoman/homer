@@ -80,10 +80,10 @@ describe User, fakefs: true do
       github.should_receive(:clone).with(File.join(Homer.root_path, username, 'dotfiles'))
       GitHub.stub(:new).and_return(github)
       user.save
+      FileUtils.mkdir_p(File.join(Dir.home, 'test'))
       FileUtils.mkdir_p(File.join(user.directory, repo_name))
-      File.new(File.join(user.directory, repo_name, 'Homerfile'), 'w')
-      File.new(File.join(user.directory, repo_name, 'dotfile1'), 'w')
-      File.new(File.join(user.directory, repo_name, 'dotfile2'), 'w')
+      File.new(File.join(Dir.home, '.dotfile1'), 'w')
+      File.new(File.join(Dir.home, 'test', '.dotfile2'), 'w')
       user.homerfile.add_dotfile('dotfile1', '~/.dotfile1')
       user.homerfile.add_dotfile('dotfile2', '~/test/.dotfile2')
     end

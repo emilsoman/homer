@@ -6,7 +6,7 @@ class User
     @directory = File.join(Homer.root_path, github_username)
     @dotfiles_repo_name = dotfiles_repo_name
     @dotfiles_directory = File.join(@directory, 'dotfiles')
-    @homerfile = Homerfile.new(File.join(@directory, dotfiles_repo_name))
+    @homerfile = Homerfile.new(@dotfiles_directory)
     @github = GitHub.new(@github_username, @dotfiles_repo_name)
   end
 
