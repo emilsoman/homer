@@ -4,6 +4,7 @@ source "http://rubygems.org"
 #   gem "activesupport", ">= 2.3.5"
   gem "github_api"
   gem "highline"
+  gem "thor"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
@@ -16,5 +17,5 @@ group :development do
 end
 
 group :test do
-  gem "fakefs"
+  gem 'fakefs', require: "fakefs/safe"
 end

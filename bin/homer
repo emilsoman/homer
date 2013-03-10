@@ -2,6 +2,7 @@
 
 require 'thor'
 require 'homer'
+require 'highline/import'
 
 class HomerRunner < Thor
 
@@ -16,11 +17,12 @@ class HomerRunner < Thor
   end
 =end
 
-  desc "init", "Initializes homer. Creates ~/.homer folder"
+  desc "init", "Initializes homer. You need to do this to configure homer"
   def init
     Homer.init
   rescue Exception => e
     puts "Error: #{e.message}"
+    puts e.backtrace
   end
 
   desc "list", "Lists your tracked dotfiles"
@@ -30,6 +32,7 @@ class HomerRunner < Thor
     puts "Error: #{e.message}"
   end
 
+=begin
   desc "add DOTFILE", "Start tracking a file"
   def add(file)
     Homer.add(file)
@@ -44,14 +47,18 @@ class HomerRunner < Thor
   rescue Exception => e
     puts "Error: #{e.message}"
   end
+=end
 
-  desc "hi GITHUB_USERNAME", "Magically brings your dotfiles from GitHub so you can feel at home"
+  desc "hi GITHUB_USERNAME", "Fetches 'dotfiles' repo of Github user"
+  option :repo, aliases: "-r", desc: "Specify a Github repository name to fetch"
   def hi(github_login)
+    repo = options[:repo] || 'dotfiles'
     Homer.hi(github_login)
   rescue Exception => e
     puts "Error: #{e.message}"
   end
 
+=begin
   desc "bye", "Self destructs leaving no trace behind"
   def bye
     Homer.bye
@@ -65,6 +72,7 @@ class HomerRunner < Thor
   rescue Exception => e
     puts "Error: #{e.message}"
   end
+=end
 
 end
 

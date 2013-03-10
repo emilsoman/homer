@@ -13,19 +13,21 @@ RSpec.configure do |config|
   #config.before(:each) do
     #Dir.stub(:home).and_return('/tmp')
   #end
-  config.include FakeFS::SpecHelpers
+  config.include FakeFS::SpecHelpers, fakefs: true
 end
 
+=begin
 # FakeFS doesn't support home class method
 class FakeFS::Dir
   def self.home
     return RealDir.home
   end
 end
+=end
 
 # monkey patch for https://github.com/defunkt/fakefs/issues/96
 class FakeFS::Dir
   def self.mkdir(path, integer = 0)
-    FileUtils.mkdir_p(path) 
+    FileUtils.mkdir_p(path)
   end
 end

@@ -1,5 +1,23 @@
 class SymLink
 
+  class << self
+    def create(file, home_relative_path)
+      #Move 'path' to backup
+      file_path = File.expand_path(home_relative_path)
+      if File.exists?(file_path) and !File.symlink?(file_path)
+        if !File.symlink?(file_path)
+          puts "File already exists at #{file_path}. Not linking #{file}"
+        else
+          puts "Symlink already exists at #{file_path}. Overwriting with #{file}"
+          File.unlink(file_path)
+        end
+      end
+      FileUtils.mkdir_p(File.dirname(file_path)) unless Dir.exists?(File.dirname(file_path))
+      File.symlink(file, file_path)
+    end
+  end
+
+=begin
   def self.file_paths
     symlinks = FileLayer.read_symlink_file
     symlinks.keys
@@ -41,5 +59,5 @@ class SymLink
       end
       return filename_to_store
     end
-
+=end
 end

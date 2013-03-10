@@ -9,14 +9,13 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Emil Soman"]
-  s.date = "2012-10-20"
+  s.date = "2013-03-10"
   s.description = "Homer makes tracking your Unix dotfiles easay peasay - UNDER DEVELOPMENT"
   s.email = "emil.soman@gmail.com"
   s.executables = ["homer"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
-    "README.md",
-    "README.rdoc"
+    "README.md"
   ]
   s.files = [
     ".document",
@@ -25,19 +24,18 @@ Gem::Specification.new do |s|
     "Gemfile.lock",
     "LICENSE.txt",
     "README.md",
-    "README.rdoc",
     "Rakefile",
     "VERSION",
     "bin/homer",
     "homer.gemspec",
     "lib/homer.rb",
-    "lib/homer/file_layer.rb",
-    "lib/homer/github_layer.rb",
+    "lib/homer/github.rb",
+    "lib/homer/homerfile.rb",
     "lib/homer/symlink.rb",
-    "spec/file_layer_spec.rb",
-    "spec/github_layer_spec.rb",
+    "lib/homer/user.rb",
     "spec/homer_spec.rb",
-    "spec/spec_helper.rb"
+    "spec/spec_helper.rb",
+    "spec/user_spec.rb"
   ]
   s.homepage = "http://github.com/emilsoman/homer"
   s.licenses = ["MIT"]
@@ -51,6 +49,7 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<github_api>, [">= 0"])
       s.add_runtime_dependency(%q<highline>, [">= 0"])
+      s.add_runtime_dependency(%q<thor>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 0"])
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
@@ -59,6 +58,7 @@ Gem::Specification.new do |s|
     else
       s.add_dependency(%q<github_api>, [">= 0"])
       s.add_dependency(%q<highline>, [">= 0"])
+      s.add_dependency(%q<thor>, [">= 0"])
       s.add_dependency(%q<rspec>, [">= 0"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_dependency(%q<bundler>, [">= 0"])
@@ -68,6 +68,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<github_api>, [">= 0"])
     s.add_dependency(%q<highline>, [">= 0"])
+    s.add_dependency(%q<thor>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 0"])
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
     s.add_dependency(%q<bundler>, [">= 0"])
