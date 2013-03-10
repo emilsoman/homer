@@ -3,6 +3,8 @@
 
 Homer makes tracking your Unix dotfiles easay peasay
 
+Refactor branch : [![Build Status](https://travis-ci.org/emilsoman/homer.png?branch=refactor)](https://travis-ci.org/emilsoman/homer)
+
 -Currently under initial development . IT IS DANGEROUS to use it , till this line is gone! -
 
 ## Installation
