@@ -1,9 +1,9 @@
 # Homer
 
-
 Homer makes tracking your Unix dotfiles easay peasay
 
-master branch : [![Build Status](https://travis-ci.org/emilsoman/homer.png?branch=master)](https://travis-ci.org/emilsoman/homer)  
+[![Build Status](https://travis-ci.org/emilsoman/homer.png?branch=master)](https://travis-ci.org/emilsoman/homer)
+[![Coverage Status](https://coveralls.io/repos/emilsoman/homer/badge.png?branch=master)](https://coveralls.io/r/emilsoman/homer)
 
 ## *Under development. Risky to use till this line is gone*
 
