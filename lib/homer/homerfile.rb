@@ -1,18 +1,19 @@
 class Homerfile
-  attr_accessor :dotfiles, :error
+  attr_accessor :dotfiles, :error, :path
   def initialize(dotfiles_directory)
     @path = File.join(dotfiles_directory, 'Homerfile')
   end
 
   def init
+    return if File.exists?(@path)
     File.new(@path, "w")
-    puts "========================================================="
-    puts "\nWe'll add some dotfiles to #{@path} and get you started\n"\
+    say "========================================================="
+    say "\nWe'll add some dotfiles to #{@path} and get you started\n"\
           "Example: To start tracking /home/username/.bash_aliases, enter the following details -\n"\
-          "\tFilename: bash_aliases\n"\
-          "\tHome relative path: ~/.bash_aliases\n"\
+          "\t<%= color('Filename: bash_aliases', :yellow) %>\n"\
+          "\t<%= color('Home relative path: ~/.bash_aliases', :yellow) %>\n"\
           "Alright. Let's do this.\n\n"
-    puts "========================================================="
+    say "========================================================="
     begin
       filename = ask("Filename: ")
       filepath = ask("Home relative path: ")
@@ -21,7 +22,9 @@ class Homerfile
   end
 
   def load
-    @dotfiles = YAML.load_file(@path) rescue {}
+    @dotfiles = File.zero?(@path) ? {} : YAML.load_file(@path)
+  rescue
+    @dotfiles = {}
   end
 
   def valid?
@@ -44,7 +47,7 @@ class Homerfile
     load
     @dotfiles ||= {}
     begin
-      FileUtils.mv(File.expand_path(file_path), File.join(File.dirname(@path), File.basename(file_path)))
+      FileUtils.mv(File.expand_path(file_path), File.join(File.dirname(@path), filename))
       @dotfiles[filename] = file_path
       save
     rescue Exception => e

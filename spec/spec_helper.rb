@@ -31,3 +31,14 @@ class FakeFS::Dir
     FileUtils.mkdir_p(path)
   end
 end
+
+# monkey patch for File.zero? https://github.com/defunkt/fakefs/pull/181
+class FakeFS::File
+  def self.zero?(path)
+    if exists?(path) and size(path) == 0
+      true
+    else
+      false
+    end
+  end
+end
