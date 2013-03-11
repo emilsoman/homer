@@ -177,4 +177,27 @@ describe Homerfile, fakefs: true do
     end
   end
 
+  describe "#save" do
+    let(:dotfiles_directory) {File.join(Dir.home, '.homer', 'emilsoman', 'dotfiles')}
+    let(:homerfile) {Homerfile.new(dotfiles_directory)}
+    before(:each) do
+      FileUtils.mkdir_p(dotfiles_directory)
+    end
+    context "when dotfiles attribute is not a hash" do
+      it "should return without doing anything" do
+        homerfile.dotfiles = "not a hash"
+        File.should_not_receive(:open)
+        YAML.should_not_receive(:dump)
+        homerfile.save
+      end
+    end
+    context "when dotfiles attribute is hash" do
+      it "should open the file and dump dotfiles attr as YAML" do
+        homerfile.dotfiles = {'file' => 'filepath'}
+        homerfile.save
+        YAML.load_file(homerfile.path).should == {'file' => 'filepath'}
+      end
+    end
+  end
+
 end

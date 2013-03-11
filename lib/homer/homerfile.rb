@@ -56,6 +56,7 @@ class Homerfile
   end
 
   def save
+    return if !@dotfiles.is_a?(Hash)
     File.open(@path, 'w') do |f|
       YAML.dump(@dotfiles, f)
     end
