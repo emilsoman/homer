@@ -1,10 +1,10 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'rspec'
-require 'homer'
-require 'fakefs/spec_helpers'
 require 'coveralls'
 Coveralls.wear!
+require 'homer'
+require 'fakefs/spec_helpers'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
