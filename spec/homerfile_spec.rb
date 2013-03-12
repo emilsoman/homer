@@ -32,7 +32,7 @@ describe Homerfile, fakefs: true do
     context "when user adds a symlink" do
       it "should create an empty Homerfile" do
         File.exists?(homerfile.path).should be_false
-        original_file = File.join(dotfiles_directory, 'symlink')
+        original_file = File.join(Dir.home, 'symlink')
         symlink_file = File.join(Dir.home, '.homer', 'symlink')
         File.new(original_file, "w")
         File.symlink(original_file, symlink_file)
@@ -41,6 +41,8 @@ describe Homerfile, fakefs: true do
         homerfile.should_receive(:agree).and_return(false)
         homerfile.init
         File.size(homerfile.path).should == 0
+        File.exists?(original_file).should be_true
+        File.exists?(symlink_file).should be_true
         File.exists?(File.join(dotfiles_directory, 'symlink')).should be_false
       end
     end
@@ -196,6 +198,119 @@ describe Homerfile, fakefs: true do
         homerfile.dotfiles = {'file' => 'filepath'}
         homerfile.save
         YAML.load_file(homerfile.path).should == {'file' => 'filepath'}
+      end
+    end
+  end
+
+  describe "#add_dotfile" do
+    let(:dotfiles_directory) {File.join(Dir.home, '.homer', 'emilsoman', 'dotfiles')}
+    let(:homerfile) {Homerfile.new(dotfiles_directory)}
+    let(:original_file) { File.join(Dir.home, '.valid_file') }
+    original_file_size = 0
+    before(:each) do
+      FileUtils.mkdir_p(dotfiles_directory)
+      homerfile.dotfiles.should == nil
+      File.open(original_file, "w") do |f|
+        f << 'Karutha kozhiku velutha mutta'
+      end
+      original_file_size = File.size(original_file)
+    end
+    context "when homerfile doesn't exist" do
+      before(:each) do
+        File.exists?(homerfile.path).should be_false
+        homerfile.add_dotfile('valid_file', '~/.valid_file')
+      end
+      it "should create a new Homerfile" do
+        File.exists?(homerfile.path).should be_true
+      end
+      it "should add file to Homerfile" do
+        YAML.load_file(homerfile.path).should == {'valid_file' => '~/.valid_file'}
+      end
+      it "should move original file to dotfiles directory" do
+        filepath_in_dotfiles_dir = File.join(dotfiles_directory, 'valid_file')
+        File.exists?(original_file).should be_false
+        File.exists?(filepath_in_dotfiles_dir).should be_true
+        File.size(filepath_in_dotfiles_dir).should == original_file_size
+      end
+    end
+    context "when homerfile contains nothing" do
+      before(:each) do
+        File.new(File.join(dotfiles_directory, 'Homerfile'), 'w')
+        File.zero?(homerfile.path).should be_true
+        homerfile.add_dotfile('valid_file', '~/.valid_file')
+      end
+      it "should add file to Homerfile" do
+        YAML.load_file(homerfile.path).should == {'valid_file' => '~/.valid_file'}
+      end
+      it "should move original file to dotfiles directory" do
+        filepath_in_dotfiles_dir = File.join(dotfiles_directory, 'valid_file')
+        File.exists?(original_file).should be_false
+        File.exists?(filepath_in_dotfiles_dir).should be_true
+        File.size(filepath_in_dotfiles_dir).should == original_file_size
+      end
+    end
+    context "when homerfile contains a hash" do
+      before(:each) do
+        File.open(File.join(dotfiles_directory, 'Homerfile'), 'w') do |f|
+          f << {'key' => 'value'}.to_yaml
+        end
+        homerfile.load
+        homerfile.dotfiles.should == {'key' => 'value'}
+        homerfile.add_dotfile('valid_file', '~/.valid_file')
+      end
+      it "should add file to Homerfile" do
+        YAML.load_file(homerfile.path).should == {'valid_file' => '~/.valid_file', 'key' => 'value'}
+      end
+      it "should move original file to dotfiles directory" do
+        filepath_in_dotfiles_dir = File.join(dotfiles_directory, 'valid_file')
+        File.exists?(original_file).should be_false
+        File.exists?(filepath_in_dotfiles_dir).should be_true
+        File.size(filepath_in_dotfiles_dir).should == original_file_size
+      end
+    end
+    context "when file added doesn't exist" do
+      before(:each) do
+        File.open(File.join(dotfiles_directory, 'Homerfile'), 'w') do |f|
+          f << {'key' => 'value'}.to_yaml
+        end
+        homerfile.load
+        homerfile.dotfiles.should == {'key' => 'value'}
+        homerfile.add_dotfile('valid_file', '~/.valid_file')
+      end
+      it "should add file to Homerfile" do
+        YAML.load_file(homerfile.path).should == {'valid_file' => '~/.valid_file', 'key' => 'value'}
+      end
+      it "should move original file to dotfiles directory" do
+        filepath_in_dotfiles_dir = File.join(dotfiles_directory, 'valid_file')
+        File.exists?(original_file).should be_false
+        File.exists?(filepath_in_dotfiles_dir).should be_true
+        File.size(filepath_in_dotfiles_dir).should == original_file_size
+      end
+    end
+    context "when user adds a non-existent file" do
+      before(:each) do
+        homerfile.should_receive(:say)
+        homerfile.add_dotfile('non-existent-file', '~/.non-existent-file')
+      end
+      it "should not create Homerfile" do
+        File.exists?(homerfile.path).should be_false
+      end
+      it "should not move any file" do
+        File.exists?(File.join(dotfiles_directory, 'non-existent-file')).should be_false
+      end
+    end
+    context "when user adds a symlink" do
+      before(:each) do
+        symlink_file = File.join(Dir.home, 'symlink')
+        File.symlink(original_file, symlink_file)
+        homerfile.should_receive(:say)
+        homerfile.add_dotfile('symlink', '~/symlink')
+      end
+      it "should not create Homerfile" do
+        File.exists?(homerfile.path).should be_false
+      end
+      it "should not move any file" do
+        File.exists?(File.join(dotfiles_directory, 'symlink')).should be_false
       end
     end
   end

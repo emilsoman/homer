@@ -47,6 +47,7 @@ class Homerfile
     load
     @dotfiles ||= {}
     begin
+      raise "File appears to be a symlink" if File.symlink?(File.expand_path(file_path))
       FileUtils.mv(File.expand_path(file_path), File.join(File.dirname(@path), filename))
       @dotfiles[filename] = file_path
       save
