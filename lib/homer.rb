@@ -34,13 +34,13 @@ class Homer
       #FileLayer.prepare_homer_folder
       puts "To be implemented"
       return
-      SymLink.add(dotfile)
+      Symlink.add(dotfile)
     end
 
     def list
       puts "To be implemented"
       return
-      SymLink.file_paths
+      Symlink.file_paths
     end
 
     def push

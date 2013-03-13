@@ -31,7 +31,7 @@ class User
     @homerfile.load
     @homerfile.dotfiles.each do |file, path|
       dotfile = File.join(@dotfiles_directory, file)
-      SymLink.create(dotfile, path)
+      Symlink.create(dotfile, path)
     end
     Homer.set_current_user(@github_username)
   end

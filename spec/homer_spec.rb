@@ -62,14 +62,14 @@ describe Homer do
 =begin
   describe ".add" do
     it "should call Symlink add" do
-      SymLink.should_receive(:add).with('dotfile')
+      Symlink.should_receive(:add).with('dotfile')
       Homer.add('dotfile')
     end
   end
 
   describe ".list" do
-    it "should call SymLink file_paths" do
-      SymLink.should_receive(:file_paths)
+    it "should call Symlink file_paths" do
+      Symlink.should_receive(:file_paths)
       Homer.list
     end
   end
