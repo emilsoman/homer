@@ -10,8 +10,8 @@ class GitHub
     github = Github.new(login: @username, password: password)
     begin
       github.repos.create(name: @repo_name)
-    rescue Github::Error::UnprocessableEntity
-      puts "Repository - '#{@repo_name}' already exists under '#{@username}', we'll see if we can use that."
+    rescue Github::Error::GithubError
+      say "<%= color('Repository - #{@repo_name} already exists under #{@username}, we will see if we can use that.', :yellow) %>"
     end
   end
 
