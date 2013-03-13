@@ -5,12 +5,21 @@ Homer makes tracking your Unix dotfiles easay peasay
 [![Build Status](https://travis-ci.org/emilsoman/homer.png?branch=master)](https://travis-ci.org/emilsoman/homer)
 [![Coverage Status](https://coveralls.io/repos/emilsoman/homer/badge.png?branch=master)](https://coveralls.io/r/emilsoman/homer)
 
-## *Under development. Risky to use till this line is gone*
+## *Under development*
 
 
 ## Installation
+```sh
+gem install homer
+homer init
+```
+This will:
 
-    gem install homer
+1. Move your dotfiles to `~/.homer/github_username/dotfiles`
+2. Create symlinks to places where the files originally belonged
+3. Create a repository on GitHub
+4. Push all your dotfiles there.
+    
 ## Usage
 
 - Start tracking dotfiles :
@@ -19,20 +28,21 @@ Homer makes tracking your Unix dotfiles easay peasay
 - List tracked files :
 
         homer list
-- Push tracked files to GitHub
+- Sync with GitHub
 
-        homer push
+        homer sync
 
 A few days later ..
 
-Need to pair program at co-worker's hostile box .
-
-- To turn on ninja mode at hostile box:
+Need to pair program and code at co-worker's hostile box ?  
+Want to use somebody's dotfiles repo you saw on GitHub ?
 
         homer hi <github login>
-- When friend complains after your display of awesomeness
+
+Rollback and use your original dotfiles ?
 
         homer bye
         
-## Wishlist
-- Use a table for listing tracked files and Symlinks ( Use [terminal table](https://github.com/visionmedia/terminal-table) ? )
+## License
+
+MIT
