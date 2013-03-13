@@ -62,6 +62,7 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
+    terminal-table (1.4.5)
     thor (0.17.0)
 
 PLATFORMS
@@ -76,4 +77,5 @@ DEPENDENCIES
   jeweler (~> 1.8.4)
   rdoc (~> 3.12)
   rspec
+  terminal-table
   thor

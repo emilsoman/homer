@@ -3,6 +3,7 @@ source "http://rubygems.org"
   gem "github_api"
   gem "highline"
   gem "thor"
+  gem "terminal-table"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

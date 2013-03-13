@@ -1,7 +1,7 @@
 class User
   attr_accessor :directory, :homerfile
 
-  def initialize(github_username, dotfiles_repo_name)
+  def initialize(github_username, dotfiles_repo_name=nil)
     @github_username = github_username
     @directory = File.join(Homer.root_path, github_username)
     @dotfiles_repo_name = dotfiles_repo_name

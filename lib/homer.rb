@@ -4,6 +4,7 @@ require 'homer/homerfile'
 require 'github_api'
 require 'homer/github'
 require 'homer/user'
+require 'terminal-table'
 
 class Homer
 
@@ -37,10 +38,15 @@ class Homer
       Symlink.add(dotfile)
     end
 
-    def list
-      puts "To be implemented"
-      return
-      Symlink.file_paths
+    def list(username)
+      user = User.new(username)
+      user.homerfile.load
+      rows = []
+      user.homerfile.dotfiles.each do |file, path|
+        rows << [file, path]
+      end
+      table = Terminal::Table.new :title => "Tracked Dotfiles", :headings => ['Filename', 'Path'], :rows => rows
+      say ("<%= color('#{table}', :green) %>")
     end
 
     def push
