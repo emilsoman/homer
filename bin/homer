@@ -20,14 +20,14 @@ class HomerRunner < Thor
   def init
     Homer.init
   rescue Exception => e
-    say "Error: <%=color('#{e.message}', :red) %>"
+    say "Error: <%= color('#{e.message}', :red) %>"
   end
 
   desc "list", "Lists your tracked dotfiles"
   def list
     Homer.list
   rescue Exception => e
-    say "Error: <%=color('#{e.message}', :red) %>"
+    say "Error: <%= color('#{e.message}', :red) %>"
   end
 
   desc "add NAME HOME_RELATIVE_PATH", "Start tracking a file."\
@@ -36,26 +36,24 @@ class HomerRunner < Thor
   def add(file, home_relative_path)
     Homer.add_dotfile(file, home_relative_path)
   rescue Exception => e
-    say "Error: <%=color('#{e.message}', :red) %>"
+    say "Error: <%= color('#{e.message}', :red) %>"
   end
 
-=begin
 
-  desc "push", "Pushes your dotfiles to GitHub"
+  desc "sync", "Sync the dotfiles of current user with GitHub"
   def push
-    Homer.push
+    Homer.sync
   rescue Exception => e
-    puts "Error: #{e.message}"
+    say "Error: <%= color('#{e.message}', :red) %>"
   end
-=end
 
   desc "hi GITHUB_USERNAME", "Fetches 'dotfiles' repo of Github user"
   option :repo, aliases: "-r", desc: "Specify a Github repository name to fetch"
   def hi(github_login)
-    repo = options[:repo] || 'dotfiles'
-    Homer.hi(github_login)
+    #repo = options[:repo] || 'dotfiles'
+    #Homer.hi(github_login)
   rescue Exception => e
-    puts "Error: #{e.message}"
+    say "Error: <%= color('#{e.message}', :red) %>"
   end
 
 =begin

@@ -26,7 +26,7 @@ class Homer
     end
 
     def wipe
-      puts "Should place your homerfiles where they actually belonged."
+      #puts "Should place your homerfiles where they actually belonged."
     end
 
     def add_dotfile(filename, home_relative_path)
@@ -45,39 +45,31 @@ class Homer
       say ("<%= color('#{table}', :green) %>")
     end
 
-    def push
-      puts "To be implemented"
-      return
-      dotfiles_dir = FileLayer.dotfiles_directory_path
-      GitHubLayer.push(dotfiles_dir)
+    def sync
+      #user = User.new(current_user)
+      #user.sync
     end
 
     def hi(login)
-      puts "To be implemented"
-      return
-      puts "Hi #{login}"
-      room = FileLayer.make_room(login)
-      puts "Your room is here : #{room}"
-      Dir.chdir(room)
-      puts "Getting all your dotfiles"
-      GitHubLayer.get_dotfiles(login)
-      puts "Getting your room ready"
-      use(room)
-      puts "Done! Be at home , #{login}"
+      #puts "To be implemented"
+      #return
+      #puts "Hi #{login}"
+      #room = FileLayer.make_room(login)
+      #puts "Your room is here : #{room}"
+      #Dir.chdir(room)
+      #puts "Getting all your dotfiles"
+      #GitHubLayer.get_dotfiles(login)
+      #puts "Getting your room ready"
+      #use(room)
+      #puts "Done! Be at home , #{login}"
     end
 
-    def use(room)
-      puts "To be implemented"
-      return
-      bye
-      FileLayer.create_current_symlink(room)
+    def use(username)
+      #puts "To be implemented"
     end
 
     def bye
-      puts "To be implemented"
-      return
-      FileLayer.delete_current_symlinks
-      FileLayer.restore_backup
+      #puts "To be implemented"
     end
 
     def root_path
