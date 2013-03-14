@@ -86,6 +86,27 @@ describe Homer, fakefs: true do
     end
   end
 
+  describe ".list" do
+    let(:user) {User.new('emilsoman')}
+    before(:each) do
+      FileUtils.mkdir_p(user.dotfiles_directory)
+      Homer.set_current_user('emilsoman')
+      user.homerfile.dotfiles = {'file' => 'path', 'file2' => 'path2'}
+      user.homerfile.save
+    end
+    it "should display a table containing all tracked files" do
+      table = double('Table')
+      Terminal::Table.should_receive(:new)
+        .with({
+          :title => "Tracked Dotfiles",
+          :headings => ['Filename', 'Path'],
+          :rows => [['file', 'path'],['file2', 'path2']]
+        }).and_return(table)
+      Homer.should_receive(:say).with("<%= color('#{table}', :green) %>")
+      Homer.list
+    end
+  end
+
 =begin
   describe ".add" do
     it "should call Symlink add" do

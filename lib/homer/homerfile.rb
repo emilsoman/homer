@@ -20,7 +20,7 @@ class Homerfile
       begin
         add_dotfile(filename, filepath)
       rescue Exception => e
-        say("<%= color('#{filepath} can\\'t tracked. Make sure it exists and it\\'s not a symlink.', :red) %>")
+        say("<%= color('#{filepath} can\\'t be tracked. Make sure it exists and it\\'s not a symlink.', :red) %>")
       end
     end while agree("Add another dotfile?")
   end

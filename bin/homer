@@ -2,7 +2,6 @@
 
 require 'thor'
 require 'homer'
-require 'highline/import'
 
 class HomerRunner < Thor
 
@@ -21,25 +20,26 @@ class HomerRunner < Thor
   def init
     Homer.init
   rescue Exception => e
-    puts "Error: #{e.message}"
-    puts e.backtrace
+    say "Error: <%=color('#{e.message}', :red) %>"
   end
 
   desc "list", "Lists your tracked dotfiles"
   def list
-    puts Homer.list
+    Homer.list
   rescue Exception => e
-    puts "Error: #{e.message}"
+    say "Error: <%=color('#{e.message}', :red) %>"
+  end
+
+  desc "add NAME HOME_RELATIVE_PATH", "Start tracking a file."\
+        "eg: NAME:vimrc (This is just a nickname), HOME_RELATIVE_PATH:~/.vimrc "\
+        "to track ~/.vimrc"
+  def add(file, home_relative_path)
+    Homer.add_dotfile(file, home_relative_path)
+  rescue Exception => e
+    say "Error: <%=color('#{e.message}', :red) %>"
   end
 
 =begin
-  desc "add DOTFILE", "Start tracking a file"
-  def add(file)
-    Homer.add(file)
-  rescue Exception => e
-    puts "Error: #{e.message}"
-    puts "Did you forget to run 'homer init' after you installed Homer gem ?"
-  end
 
   desc "push", "Pushes your dotfiles to GitHub"
   def push

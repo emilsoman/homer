@@ -4,6 +4,7 @@ require 'homer/homerfile'
 require 'github_api'
 require 'homer/github'
 require 'homer/user'
+require 'highline/import'
 require 'terminal-table'
 
 class Homer
@@ -21,9 +22,7 @@ class Homer
         github.create_repo(password, repo_name)
       end
       setup_user(github_username, repo_name)
-      say("<%= color('Your dotfiles have been added to homer and pushed to GitHub!', :green) %>!")
-      #FileLayer.init
-      #GitHubLayer.init(FileLayer.dotfiles_directory_path)
+      say("<%= color('Your dotfiles have been added to homer and pushed to GitHub!', :green) %>")
     end
 
     def wipe
@@ -35,8 +34,8 @@ class Homer
       user.add_dotfile(filename, home_relative_path)
     end
 
-    def list(username)
-      user = User.new(username)
+    def list
+      user = User.new(current_user)
       user.homerfile.load
       rows = []
       user.homerfile.dotfiles.each do |file, path|
