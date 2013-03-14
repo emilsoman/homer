@@ -96,4 +96,29 @@ describe User, fakefs: true do
     end
   end
 
+  describe "#add_dotfile" do
+    let(:dotfile_path) {File.join(Dir.home, 'test', '.dotfile')}
+    let(:filename) {'file'}
+    let(:dotfile_content) {'Oh njan vicharichu etho kuthaka muthalali ayirikum ennu'}
+    let(:user) { User.new('emilsoman')  }
+    before(:each) do
+      FileUtils.mkdir_p(File.join(Dir.home, 'test'))
+      FileUtils.mkdir_p(user.directory)
+      File.open(dotfile_path, 'w') do |f|
+        f << dotfile_content
+      end
+      filesize = File.size(dotfile_path)
+      user.add_dotfile(filename, '~/test/.dotfile')
+    end
+    it "should move file to homerfile" do
+      File.size(File.join(user.dotfiles_directory,filename)).should == dotfile_content.size
+    end
+    it "should create a symlink at original dotfile path" do
+      File.symlink?(dotfile_path).should be_true
+    end
+    it "should link the symlink to file in user directory in homer" do
+      File.readlink(dotfile_path).should == File.join(user.dotfiles_directory,filename)
+    end
+  end
+
 end
