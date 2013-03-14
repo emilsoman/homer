@@ -22,9 +22,11 @@ This will:
     
 ## Usage
 
+*Note: Some of these features are still under development*
+
 - Start tracking dotfiles :
 
-        homer add ~/.vimrc
+        homer add vimrc ~/.vimrc
 - List tracked files :
 
         homer list

@@ -41,7 +41,7 @@ class HomerRunner < Thor
 
 
   desc "sync", "Sync the dotfiles of current user with GitHub"
-  def push
+  def sync
     Homer.sync
   rescue Exception => e
     say "Error: <%= color('#{e.message}', :red) %>"
