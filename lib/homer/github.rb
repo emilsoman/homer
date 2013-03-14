@@ -1,21 +1,20 @@
 class GitHub
-  attr_accessor :repo
-  def initialize(github_username, repo_name)
+  attr_accessor
+  def initialize(github_username)
     @username = github_username
-    @repo_name = repo_name
-    @repo = "git@github.com:#{github_username}/#{repo_name}.git"
   end
 
-  def create_repo(password)
+  def create_repo(password, repo_name)
     github = Github.new(login: @username, password: password)
     begin
-      github.repos.create(name: @repo_name)
+      github.repos.create(name: repo_name)
     rescue Github::Error::GithubError
-      say "<%= color('Repository - #{@repo_name} already exists under #{@username}, we will see if we can use that.', :yellow) %>"
+      say "<%= color('Repository - #{repo_name} already exists under #{@username}, we will see if we can use that.', :yellow) %>"
     end
   end
 
-  def clone(clone_directory)
+  def clone(repo_name, clone_directory)
+    repo = "git@github.com:#{@username}/#{repo_name}.git"
     system("git clone --quiet #{repo} #{clone_directory}")
   end
 

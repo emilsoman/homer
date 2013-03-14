@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Homer do
+describe Homer, fakefs: true do
   describe ".init" do
     let(:username){ 'emilsoman' }
     let(:repo_name){ 'dotfiles' }
@@ -12,8 +12,8 @@ describe Homer do
         Homer.should_receive(:ask).with("Okay.We'll create a new repo then. Pick a name : ").and_return(repo_name)
         Homer.should_receive(:ask).with("GitHub password : ").and_return(password)
         github = double('Github')
-        GitHub.should_receive(:new).with(username, repo_name).and_return(github)
-        github.should_receive(:create_repo).with(password)
+        GitHub.should_receive(:new).with(username).and_return(github)
+        github.should_receive(:create_repo).with(password, repo_name)
         Homer.should_receive(:setup_user).with(username, repo_name)
         Homer.stub(:say)
         Homer.init
@@ -52,10 +52,37 @@ describe Homer do
       username = 'emilsoman'
       repo_name = 'dotfiles'
       user = double('User')
-      User.should_receive(:new).with(username, repo_name).and_return(user)
-      user.should_receive(:init)
+      User.should_receive(:new).with(username).and_return(user)
+      user.should_receive(:init).with(repo_name)
       user.should_receive(:use)
       Homer.setup_user(username, repo_name)
+    end
+  end
+
+  describe ".add_dotfile" do
+    let(:dotfile_path) {File.join(Dir.home, 'test', '.dotfile')}
+    let(:filename) {'file'}
+    let(:username) {'emilsoman'}
+    let(:dotfile_content) {'Oh njan vicharichu etho kuthaka muthalali ayirikum ennu'}
+    let(:user) { User.new(username)  }
+    before(:each) do
+      FileUtils.mkdir_p(File.join(Dir.home, 'test'))
+      FileUtils.mkdir_p(user.directory)
+      Homer.set_current_user(username)
+      File.open(dotfile_path, 'w') do |f|
+        f << dotfile_content
+      end
+      filesize = File.size(dotfile_path)
+      Homer.add_dotfile(filename, '~/test/.dotfile')
+    end
+    it "should move file to homerfile" do
+      File.size(File.join(user.dotfiles_directory,filename)).should == dotfile_content.size
+    end
+    it "should create a symlink at original dotfile path" do
+      File.symlink?(dotfile_path).should be_true
+    end
+    it "should link the symlink to file in user directory in homer" do
+      File.readlink(dotfile_path).should == File.join(user.dotfiles_directory,filename)
     end
   end
 

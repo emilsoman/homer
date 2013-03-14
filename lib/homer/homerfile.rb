@@ -17,7 +17,11 @@ class Homerfile
     begin
       filename = ask("Filename: ")
       filepath = ask("Home relative path: ")
-      add_dotfile(filename, filepath)
+      begin
+        add_dotfile(filename, filepath)
+      rescue Exception => e
+        say("<%= color('#{filepath} can\\'t tracked. Make sure it exists and it\\'s not a symlink.', :red) %>")
+      end
     end while agree("Add another dotfile?")
   end
 
@@ -46,14 +50,10 @@ class Homerfile
   def add_dotfile(filename, file_path)
     load
     @dotfiles ||= {}
-    begin
-      raise "File appears to be a symlink" if File.symlink?(File.expand_path(file_path))
-      FileUtils.mv(File.expand_path(file_path), File.join(File.dirname(@path), filename))
-      @dotfiles[filename] = file_path
-      save
-    rescue Exception => e
-      say("<%= color('#{file_path} can\\'t tracked. Make sure it exists and it\\'s not a symlink.', :red) %>")
-    end
+    raise "File appears to be a symlink. Can't add a symlink." if File.symlink?(File.expand_path(file_path))
+    FileUtils.mv(File.expand_path(file_path), File.join(File.dirname(@path), filename))
+    @dotfiles[filename] = file_path
+    save
   end
 
   def save

@@ -9,9 +9,8 @@ describe User, fakefs: true do
   end
 
   describe ".new" do
-    let(:user) { User.new(username, repo_name) }
+    let(:user) { User.new(username) }
     it "should set user directory path on directory attribute" do
-      user = User.new(username, repo_name)
       user.directory.should == File.join(Dir.home, '.homer', username)
     end
   end
@@ -23,10 +22,10 @@ describe User, fakefs: true do
         homerfile.should_receive(:valid?).and_return true
         homerfile.should_not_receive :init
         Homerfile.should_receive(:new).with(File.join(Homer.root_path, username, repo_name)).and_return(homerfile)
-        user = User.new(username, repo_name)
+        user = User.new(username)
         user.should_receive :save
         user.should_receive :sync
-        user.init
+        user.init(repo_name)
       end
     end
     context 'when user does not have a valid Homerfile' do
@@ -35,10 +34,10 @@ describe User, fakefs: true do
         homerfile.should_receive(:valid?).and_return false
         homerfile.should_receive :init
         Homerfile.should_receive(:new).with(File.join(Homer.root_path, username, repo_name)).and_return(homerfile)
-        user = User.new(username, repo_name)
+        user = User.new(username)
         user.should_receive :save
         user.should_receive :sync
-        user.init
+        user.init(repo_name)
       end
     end
   end
@@ -46,18 +45,18 @@ describe User, fakefs: true do
   describe "#save" do
     let(:github){ double('GitHub').as_null_object}
     it "should create user directory" do
-      github.should_receive(:clone).with(File.join(Homer.root_path, username, 'dotfiles'))
+      github.should_receive(:clone).with(repo_name, File.join(Homer.root_path, username, 'dotfiles'))
       GitHub.should_receive(:new).and_return(github)
-      user = User.new(username, repo_name)
+      user = User.new(username)
       Dir.exists?(user.directory).should be_false
-      user.save
+      user.save(repo_name)
       Dir.exists?(user.directory).should be_true
     end
     it "should clone dotfiles repo" do
-      github.should_receive(:clone).with(File.join(Homer.root_path, username, 'dotfiles'))
+      github.should_receive(:clone).with(repo_name, File.join(Homer.root_path, username, 'dotfiles'))
       GitHub.should_receive(:new).and_return(github)
-      user = User.new(username, repo_name)
-      user.save
+      user = User.new(username)
+      user.save(repo_name)
     end
   end
 
@@ -66,7 +65,7 @@ describe User, fakefs: true do
     it "should invoke github.sync" do
       github.should_receive(:sync)
       GitHub.should_receive(:new).and_return(github)
-      user = User.new(username, repo_name)
+      user = User.new(username)
       FileUtils.mkdir_p(File.join(user.directory, repo_name))
       user.sync
       Dir.pwd.should == File.join(user.directory, repo_name)
@@ -74,12 +73,12 @@ describe User, fakefs: true do
   end
 
   describe "#use" do
-    let(:user){ User.new(username, repo_name)  }
+    let(:user){ User.new(username)  }
     let(:github){ double('GitHub').as_null_object}
     before(:each) do
-      github.should_receive(:clone).with(File.join(Homer.root_path, username, 'dotfiles'))
+      github.should_receive(:clone).with(repo_name, File.join(Homer.root_path, username, 'dotfiles'))
       GitHub.stub(:new).and_return(github)
-      user.save
+      user.save(repo_name)
       FileUtils.mkdir_p(File.join(Dir.home, 'test'))
       FileUtils.mkdir_p(File.join(user.directory, repo_name))
       File.new(File.join(Dir.home, '.dotfile1'), 'w')

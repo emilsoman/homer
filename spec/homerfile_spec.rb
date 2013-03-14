@@ -268,7 +268,7 @@ describe Homerfile, fakefs: true do
         File.size(filepath_in_dotfiles_dir).should == original_file_size
       end
     end
-    context "when file added doesn't exist" do
+    context "when user adds a valid file" do
       before(:each) do
         File.open(File.join(dotfiles_directory, 'Homerfile'), 'w') do |f|
           f << {'key' => 'value'}.to_yaml
@@ -289,8 +289,9 @@ describe Homerfile, fakefs: true do
     end
     context "when user adds a non-existent file" do
       before(:each) do
-        homerfile.should_receive(:say)
-        homerfile.add_dotfile('non-existent-file', '~/.non-existent-file')
+        expect do
+          homerfile.add_dotfile('non-existent-file', '~/.non-existent-file')
+        end.to raise_error("No such file or directory - #{File.join(Dir.home, '.non-existent-file')}")
       end
       it "should not create Homerfile" do
         File.exists?(homerfile.path).should be_false
@@ -303,8 +304,9 @@ describe Homerfile, fakefs: true do
       before(:each) do
         symlink_file = File.join(Dir.home, 'symlink')
         File.symlink(original_file, symlink_file)
-        homerfile.should_receive(:say)
-        homerfile.add_dotfile('symlink', '~/symlink')
+        expect do
+          homerfile.add_dotfile('symlink', '~/symlink')
+        end.to raise_error("File appears to be a symlink. Can't add a symlink.")
       end
       it "should not create Homerfile" do
         File.exists?(homerfile.path).should be_false

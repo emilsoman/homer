@@ -4,13 +4,7 @@ describe GitHub do
 
   let(:github_username) {'emilsoman'}
   let(:repo_name) {'dotfiles'}
-  let(:github) {GitHub.new(github_username, repo_name)}
-
-  describe ".new" do
-    it "should set repo" do
-      github.repo.should == "git@github.com:#{github_username}/#{repo_name}.git"
-    end
-  end
+  let(:github) {GitHub.new(github_username)}
 
   describe "#create_repo" do
     let(:password) {'password'}
@@ -22,7 +16,7 @@ describe GitHub do
         github_api.stub_chain(:repos, :create).and_raise(Github::Error::GithubError)
         Github.should_receive(:new).with({login: github_username, password: password}).and_return(github_api)
         github.should_receive(:say).with("<%= color('Repository - #{repo_name} already exists under #{github_username}, we will see if we can use that.', :yellow) %>")
-        github.create_repo(password)
+        github.create_repo(password, repo_name)
       end
     end
     context "when repo doesn't exist in github" do
@@ -30,7 +24,7 @@ describe GitHub do
         github_api.stub_chain(:repos, :create)
         Github.should_receive(:new).with({login: github_username, password: password}).and_return(github_api)
         github.should_not_receive(:say).with("<%= color('Repository - #{repo_name} already exists under #{github_username}, we will see if we can use that.', :yellow) %>")
-        github.create_repo(password)
+        github.create_repo(password, repo_name)
       end
 
     end
@@ -39,8 +33,8 @@ describe GitHub do
   describe "#clone" do
     it "should call system git clone" do
       clone_directory = '/home/emil/.homer/test/dotfiles'
-      github.should_receive('system').with("git clone --quiet #{github.repo} #{clone_directory}")
-      github.clone(clone_directory)
+      github.should_receive('system').with("git clone --quiet git@github.com:#{github_username}/#{repo_name}.git #{clone_directory}")
+      github.clone(repo_name, clone_directory)
     end
   end
 

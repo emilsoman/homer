@@ -16,9 +16,9 @@ class Homer
         repo_name = ask("What's the repository's name? ")
       else
         repo_name = ask("Okay.We'll create a new repo then. Pick a name : ")
-        github = GitHub.new(github_username, repo_name)
+        github = GitHub.new(github_username)
         password = ask("GitHub password : ") { |q| q.echo = false }
-        github.create_repo(password)
+        github.create_repo(password, repo_name)
       end
       setup_user(github_username, repo_name)
       say("<%= color('Your dotfiles have been added to homer and pushed to GitHub!', :green) %>!")
@@ -27,15 +27,12 @@ class Homer
     end
 
     def wipe
-      puts "Real functionality is too dangerous to be a release candidate for now . ;)"
-      #FileLayer.delete_homer_folder
+      puts "Should place your homerfiles where they actually belonged."
     end
 
-    def add(dotfile)
-      #FileLayer.prepare_homer_folder
-      puts "To be implemented"
-      return
-      Symlink.add(dotfile)
+    def add_dotfile(filename, home_relative_path)
+      user = User.new(current_user)
+      user.add_dotfile(filename, home_relative_path)
     end
 
     def list(username)
@@ -111,8 +108,8 @@ class Homer
     end
 
     def setup_user(github_username, repo_name)
-      user = User.new(github_username, repo_name)
-      user.init
+      user = User.new(github_username)
+      user.init(repo_name)
       user.use
     end
 
