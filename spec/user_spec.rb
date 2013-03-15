@@ -94,6 +94,12 @@ describe User, fakefs: true do
       File.readlink(symlink1).should == File.join(user.directory, repo_name, 'dotfile1')
       File.readlink(symlink2).should == File.join(user.directory, repo_name, 'dotfile2')
     end
+    context "when homerfile is invalid" do
+      it "should raise exception" do
+        user.homerfile.should_receive(:validate!).and_raise "invalid homerfile"
+        expect{user.use}.to raise_error "invalid homerfile"
+      end
+    end
   end
 
   describe "#add_dotfile" do
@@ -118,6 +124,39 @@ describe User, fakefs: true do
     end
     it "should link the symlink to file in user directory in homer" do
       File.readlink(dotfile_path).should == File.join(user.dotfiles_directory,filename)
+    end
+  end
+
+  describe ".exists?" do
+    let(:user) { User.new(username) }
+    context "when user directory exists" do
+      it "should return true" do
+        FileUtils.mkdir_p(user.directory)
+        User.exists?(username).should be_true
+      end
+    end
+    context "when user directory does't exist" do
+      it "should return false" do
+        User.exists?('rosemary').should be_false
+      end
+    end
+  end
+
+  describe ".delete" do
+    let(:user) { User.new(username) }
+    context "when user directory exists" do
+      it "should delete user directory" do
+        FileUtils.mkdir_p(user.directory)
+        User.exists?(username).should be_true
+        User.delete(username)
+        User.exists?(username).should be_false
+      end
+    end
+    context "when user directory does't exist" do
+      it "should do nothing" do
+        User.exists?('rosemary').should be_false
+        expect{User.delete('rosemary')}.not_to raise_error
+      end
     end
   end
 

@@ -30,46 +30,37 @@ class Homer
     end
 
     def add_dotfile(filename, home_relative_path)
-      user = User.new(current_user)
+      user = current_user
       user.add_dotfile(filename, home_relative_path)
     end
 
     def list
-      user = User.new(current_user)
+      user = current_user
       user.homerfile.load
       rows = []
       user.homerfile.dotfiles.each do |file, path|
         rows << [file, path]
       end
-      table = Terminal::Table.new :title => "Tracked Dotfiles", :headings => ['Filename', 'Path'], :rows => rows
+      table = Terminal::Table.new :title => "Dotfiles of #{user.github_username}", :headings => ['Filename', 'Path'], :rows => rows
       say ("<%= color('#{table}', :green) %>")
     end
 
     def sync
-      #user = User.new(current_user)
-      #user.sync
+      current_user.sync
     end
 
-    def hi(login)
-      #puts "To be implemented"
-      #return
-      #puts "Hi #{login}"
-      #room = FileLayer.make_room(login)
-      #puts "Your room is here : #{room}"
-      #Dir.chdir(room)
-      #puts "Getting all your dotfiles"
-      #GitHubLayer.get_dotfiles(login)
-      #puts "Getting your room ready"
-      #use(room)
-      #puts "Done! Be at home , #{login}"
-    end
-
-    def use(username)
-      #puts "To be implemented"
+    def hi(login, dotfiles_repo_name='dotfiles')
+      user = User.new(login)
+      user.save(dotfiles_repo_name) if !User.exists?(login)
+      user.use
+      say("<%= color('Homer says hello to #{login}!', :green) %>")
     end
 
     def bye
-      #puts "To be implemented"
+      #Cleanup after saying bye to old user ?
+      user = User.new(get_config(:default_user))
+      user.use
+      say("<%= color('Homer says hello to #{user.github_username}!', :green) %>")
     end
 
     def root_path
@@ -82,26 +73,34 @@ class Homer
       return File.join(root_path, 'config.yml')
     end
 
-    def set_current_user(username)
-      content = {current_user: username}
+    def set_config(key, value)
       if File.exists?(config_path)
         content = YAML.load_file(config_path)
-        content[:current_user] = username
+        content[key] = value
+      else
+        content = {key => value}
       end
       File.open(config_path, 'w') do |f|
         YAML.dump(content, f)
       end
     end
 
-    def current_user
+
+    def get_config(key)
       config = YAML.load_file(config_path)
-      return config[:current_user]
+      return config[key]
+    rescue
+      return nil
     end
 
     def setup_user(github_username, repo_name)
       user = User.new(github_username)
       user.init(repo_name)
       user.use
+    end
+
+    def current_user
+      user = User.new(get_config(:current_user))
     end
 
   end

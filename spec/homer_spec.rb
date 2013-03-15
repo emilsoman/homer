@@ -32,7 +32,7 @@ describe Homer, fakefs: true do
     end
   end
 
-  describe ".root_path", fakefs: true do
+  describe ".root_path" do
     it "should return the absolute path to .homer" do
       expected_root_path = File.join(Dir.home, '.homer')
       Dir.exists?(expected_root_path).should be_false
@@ -41,9 +41,34 @@ describe Homer, fakefs: true do
     end
   end
 
-  describe ".config_path", fakefs: true do
+  describe ".config_path" do
     it "should return the absolute path to .homer/config.yml" do
       Homer.config_path.should == File.join(Homer.root_path, 'config.yml')
+    end
+  end
+
+  describe "config stuff" do
+    before(:each) do
+      Homer.set_config(:default_user, 'defunkt')
+      Homer.set_config(:current_user, 'emilsoman')
+    end
+    describe ".get_config" do
+      it "should return the value of config attribute in .homer/config.yml" do
+        Homer.get_config(:current_user).should == 'emilsoman'
+        Homer.get_config(:default_user).should == 'defunkt'
+      end
+      context "when config file doesn't exist" do
+        it "should return nil" do
+          File.delete(Homer.config_path)
+          Homer.get_config(:current_user).should be_nil
+          Homer.get_config(:default_user).should be_nil
+        end
+      end
+      context "when config attribute doesn't exist" do
+        it "should return nil" do
+          Homer.get_config(:non_existent_key).should be_nil
+        end
+      end
     end
   end
 
@@ -68,7 +93,7 @@ describe Homer, fakefs: true do
     before(:each) do
       FileUtils.mkdir_p(File.join(Dir.home, 'test'))
       FileUtils.mkdir_p(user.directory)
-      Homer.set_current_user(username)
+      Homer.set_config(:current_user, username)
       File.open(dotfile_path, 'w') do |f|
         f << dotfile_content
       end
@@ -90,7 +115,7 @@ describe Homer, fakefs: true do
     let(:user) {User.new('emilsoman')}
     before(:each) do
       FileUtils.mkdir_p(user.dotfiles_directory)
-      Homer.set_current_user('emilsoman')
+      Homer.set_config(:current_user, 'emilsoman')
       user.homerfile.dotfiles = {'file' => 'path', 'file2' => 'path2'}
       user.homerfile.save
     end
@@ -98,7 +123,7 @@ describe Homer, fakefs: true do
       table = double('Table')
       Terminal::Table.should_receive(:new)
         .with({
-          :title => "Tracked Dotfiles",
+          :title => "Dotfiles of emilsoman",
           :headings => ['Filename', 'Path'],
           :rows => [['file', 'path'],['file2', 'path2']]
         }).and_return(table)
@@ -107,20 +132,57 @@ describe Homer, fakefs: true do
     end
   end
 
-=begin
-  describe ".add" do
-    it "should call Symlink add" do
-      Symlink.should_receive(:add).with('dotfile')
-      Homer.add('dotfile')
+  describe ".sync" do
+    it "should invoke current_user#sync" do
+      Homer.set_config(:current_user, 'emilsoman')
+      user = double('User')
+      user.should_receive(:sync)
+      User.should_receive(:new).with('emilsoman').and_return(user)
+      Homer.sync
     end
   end
 
-  describe ".list" do
-    it "should call Symlink file_paths" do
-      Symlink.should_receive(:file_paths)
-      Homer.list
+  describe ".hi" do
+    let(:user) {double('User')}
+    let(:username) {'emilsoman'}
+    before(:each) do
+      Homer.should_receive(:say).with("<%= color('Homer says hello to #{username}!', :green) %>")
+      user.should_receive(:use)
+    end
+    context "when user exists" do
+      it "should just use the user" do
+        User.should_receive(:exists?).and_return true
+        user.should_not_receive(:save)
+        User.should_receive(:new).with(username).and_return user
+        Homer.hi(username)
+      end
+    end
+    context "when user doesn't exist" do
+      it "should clone the repo and use the user" do
+        User.should_receive(:exists?).and_return false
+        user.should_receive(:save).with('dotfiles_repo')
+        User.should_receive(:new).with(username).and_return user
+        Homer.hi(username, 'dotfiles_repo')
+      end
     end
   end
+
+  describe ".bye" do
+    it "should use default user" do
+      Homer.set_config(:default_user, 'emilsoman')
+      user = User.new('emilsoman')
+      FileUtils.mkdir_p(user.dotfiles_directory)
+      File.open(user.homerfile.path, "w") do |f|
+        f << {"Polandie patti" => " samsaarikkaruthu. Atheniku isthamalla"}.to_yaml
+      end
+      user.should_receive(:use)
+      User.should_receive(:new).with('emilsoman').and_return user
+      Homer.should_receive(:say).with("<%= color('Homer says hello to #{user.github_username}!', :green) %>")
+      Homer.bye
+    end
+  end
+
+=begin
 
   describe ".push" do
     it "should call GitHubLayer push with dotfiles directory" do

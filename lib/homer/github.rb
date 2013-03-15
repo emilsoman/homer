@@ -13,7 +13,7 @@ class GitHub
     end
   end
 
-  def clone(repo_name, clone_directory)
+  def clone(repo_name="dotfiles", clone_directory="dotfiles")
     repo = "git@github.com:#{@username}/#{repo_name}.git"
     system("git clone --quiet #{repo} #{clone_directory}")
   end

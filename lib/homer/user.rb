@@ -1,5 +1,5 @@
 class User
-  attr_accessor :directory, :homerfile, :dotfiles_directory
+  attr_accessor :directory, :homerfile, :dotfiles_directory, :github_username
 
   def initialize(github_username)
     @github_username = github_username
@@ -27,18 +27,30 @@ class User
   end
 
   def use
+    @homerfile.validate!
     @homerfile.load
     @homerfile.dotfiles.each do |file, path|
       dotfile = File.join(@dotfiles_directory, file)
       Symlink.create(dotfile, path)
     end
-    Homer.set_current_user(@github_username)
+    Homer.set_config(:current_user, @github_username)
   end
 
   def add_dotfile(filename, home_relative_path)
     homerfile.add_dotfile(filename, home_relative_path)
     dotfile = File.join(@dotfiles_directory, filename)
     Symlink.create(dotfile, home_relative_path)
+  end
+
+  def self.exists?(username)
+    user = User.new(username)
+    Dir.exists?(user.directory) ? true : false
+  end
+
+  def self.delete(username)
+    user = User.new(username)
+    return if !User.exists?(username)
+    FileUtils.rm_rf(user.directory)
   end
 
 end
