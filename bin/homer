@@ -7,70 +7,61 @@ class HomerRunner < Thor
 
   default_task :help
 
-=begin
-  desc "wipe", "Removes ~/.homer folder. WARNING : THIS IS DANGEROUS"
-  def wipe
-    Homer.wipe
-  rescue Exception => e
-    puts "Error: #{e.message}"
-  end
-=end
-
   desc "init", "Initializes homer. You need to do this to configure homer"
   def init
     Homer.init
+    say("Your dotfiles have been added to homer and pushed to GitHub!", :green)
   rescue Exception => e
-    say "Error: <%= color('#{e.message}', :red) %>"
+    say "Error: #{e.message}", :red
   end
 
   desc "list", "Lists your tracked dotfiles"
   def list
     Homer.list
   rescue Exception => e
-    say "Error: <%= color('#{e.message}', :red) %>"
+    say "Error: #{e.message}", :red
   end
 
   desc "add NAME HOME_RELATIVE_PATH", "Start tracking a file."\
         "eg: NAME:vimrc (This is just a nickname), HOME_RELATIVE_PATH:~/.vimrc "\
         "to track ~/.vimrc"
   def add(file, home_relative_path)
-    Homer.add_dotfile(file, home_relative_path)
+    Homer.add_dotfile(file, home_relative_path.sub(Dir.home, '~'))
   rescue Exception => e
-    say "Error: <%= color('#{e.message}', :red) %>"
+    say "Error: #{e.message}", :red
   end
-
 
   desc "sync", "Sync the dotfiles of current user with GitHub"
   def sync
     Homer.sync
   rescue Exception => e
-    say "Error: <%= color('#{e.message}', :red) %>"
+    say "Error: #{e.message}", :red
   end
 
-  desc "hi GITHUB_USERNAME", "Fetches 'dotfiles' repo of Github user"
-  option :repo, aliases: "-r", desc: "Specify a Github repository name to fetch"
-  def hi(github_login)
-    #repo = options[:repo] || 'dotfiles'
-    #Homer.hi(github_login)
+  desc "hi GITHUB_USERNAME DOTFILES_REPO_NAME", "Fetches dotfiles repo of Github user"
+  def hi(github_login, dotfiles_repo = 'dotfiles')
+    Homer.hi(github_login, dotfiles_repo)
+    say("Homer says hello to #{login}!", :green)
   rescue Exception => e
-    say "Error: <%= color('#{e.message}', :red) %>"
+    say "Error: #{e.message}", :red
   end
 
-=begin
-  desc "bye", "Self destructs leaving no trace behind"
+  desc "bye", "Use the default user's dotfiles"
   def bye
     Homer.bye
+    say("Homer says hello to #{user.github_username}!", :green)
   rescue Exception => e
-    puts "Error: #{e.message}"
+    say "Error: #{e.message}", :red
   end
 
-  desc "restore", "Move back original files and remove symlinks"
-  def restore
-    puts "This should move back the original dotfiles and remove all symlinks"
+  desc "eliminate GITHUB_USERNAME", "Removes a User's dotfiles directory. THIS IS DANGEROUS!"
+  def eliminate
+    puts "To be implemented"
+    return
+    #Homer.eliminate
   rescue Exception => e
-    puts "Error: #{e.message}"
+    say "Error: #{e.message}", :red
   end
-=end
 
 end
 

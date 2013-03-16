@@ -15,7 +15,6 @@ describe Homer, fakefs: true do
         GitHub.should_receive(:new).with(username).and_return(github)
         github.should_receive(:create_repo).with(password, repo_name)
         Homer.should_receive(:setup_user).with(username, repo_name)
-        Homer.stub(:say)
         Homer.init
       end
     end
@@ -26,7 +25,6 @@ describe Homer, fakefs: true do
         Homer.should_receive(:agree).with("Do you have a dotfiles repository on GitHub already? ").and_return(true)
         Homer.should_receive(:ask).with("What's the repository's name? ").and_return(repo_name)
         Homer.should_receive(:setup_user).with(username, repo_name)
-        Homer.stub(:say)
         Homer.init
       end
     end
@@ -80,6 +78,7 @@ describe Homer, fakefs: true do
       User.should_receive(:new).with(username).and_return(user)
       user.should_receive(:init).with(repo_name)
       user.should_receive(:use)
+      Homer.should_receive(:set_config).with(:default_user, username)
       Homer.setup_user(username, repo_name)
     end
   end
@@ -146,7 +145,6 @@ describe Homer, fakefs: true do
     let(:user) {double('User')}
     let(:username) {'emilsoman'}
     before(:each) do
-      Homer.should_receive(:say).with("<%= color('Homer says hello to #{username}!', :green) %>")
       user.should_receive(:use)
     end
     context "when user exists" do
@@ -177,7 +175,6 @@ describe Homer, fakefs: true do
       end
       user.should_receive(:use)
       User.should_receive(:new).with('emilsoman').and_return user
-      Homer.should_receive(:say).with("<%= color('Homer says hello to #{user.github_username}!', :green) %>")
       Homer.bye
     end
   end

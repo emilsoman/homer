@@ -22,7 +22,6 @@ class Homer
         github.create_repo(password, repo_name)
       end
       setup_user(github_username, repo_name)
-      say("<%= color('Your dotfiles have been added to homer and pushed to GitHub!', :green) %>")
     end
 
     def wipe
@@ -53,14 +52,12 @@ class Homer
       user = User.new(login)
       user.save(dotfiles_repo_name) if !User.exists?(login)
       user.use
-      say("<%= color('Homer says hello to #{login}!', :green) %>")
     end
 
     def bye
       #Cleanup after saying bye to old user ?
       user = User.new(get_config(:default_user))
       user.use
-      say("<%= color('Homer says hello to #{user.github_username}!', :green) %>")
     end
 
     def root_path
@@ -97,6 +94,7 @@ class Homer
       user = User.new(github_username)
       user.init(repo_name)
       user.use
+      set_config(:default_user, github_username)
     end
 
     def current_user

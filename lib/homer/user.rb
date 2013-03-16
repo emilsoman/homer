@@ -48,6 +48,9 @@ class User
   end
 
   def self.delete(username)
+    # TODO User shouldn't delete current_user
+    # If user deletes default_user, set
+    # current_user as default ?
     user = User.new(username)
     return if !User.exists?(username)
     FileUtils.rm_rf(user.directory)
