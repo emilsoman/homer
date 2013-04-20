@@ -14,8 +14,10 @@ class GitHub
   end
 
   def clone(repo_name="dotfiles", clone_directory="dotfiles")
-    repo = "git@github.com:#{@username}/#{repo_name}.git"
-    system("git clone --quiet #{repo} #{clone_directory}")
+    readonly_repo_url = "git://github.com/#{@username}/#{repo_name}.git"
+    set_remote_url_cmd = "git remote set-url --push origin git@github.com:#{@username}/#{repo_name}.git"
+    system("git clone --quiet #{readonly_repo_url} #{clone_directory}")
+    system(set_remote_url_cmd)
   end
 
   def sync
