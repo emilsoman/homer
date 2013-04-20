@@ -31,9 +31,12 @@ describe GitHub do
   end
 
   describe "#clone" do
-    it "should call system git clone" do
+    it 'should clone the repo and set the remote push url to a pushable SSH url' do
       clone_directory = '/home/emil/.homer/test/dotfiles'
-      github.should_receive('system').with("git clone --quiet git@github.com:#{github_username}/#{repo_name}.git #{clone_directory}")
+      git_clone_cmd = "git clone --quiet git://github.com/#{github_username}/#{repo_name}.git #{clone_directory}"
+      set_remote_url_cmd = "git remote set-url --push origin git@github.com:#{github_username}/#{repo_name}.git"
+      github.should_receive('system').with(git_clone_cmd)
+      github.should_receive('system').with(set_remote_url_cmd)
       github.clone(repo_name, clone_directory)
     end
   end
@@ -47,5 +50,5 @@ describe GitHub do
       github.sync
     end
   end
-  
+
 end
