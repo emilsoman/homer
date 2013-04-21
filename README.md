@@ -41,7 +41,7 @@ Want to use somebody's dotfiles repo you saw on GitHub ?
 
         homer hi <github login>
 
-Rollback and use your original dotfiles ?
+Rollback and use the original dotfiles ?
 
         homer bye
         
