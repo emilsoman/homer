@@ -1,4 +1,5 @@
 require 'yaml'
+require 'homer/version'
 require 'homer/symlink'
 require 'homer/homerfile'
 require 'github_api'
