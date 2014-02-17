@@ -1,68 +1,70 @@
 #!/usr/bin/env ruby
 
 require 'thor'
-require 'homer'
+require 'homer/cli'
 
-class HomerRunner < Thor
+module Homer
+  class HomerRunner < Thor
 
-  default_task :help
+    default_task :help
 
-  desc "init", "Initializes homer. You need to do this to configure homer"
-  def init
-    Homer.init
-    say("Your dotfiles have been added to homer and pushed to GitHub!", :green)
-  rescue Exception => e
-    say "Error: #{e.message}", :red
+    desc "init <GITHUB_USERNAME>/<DOTFILES_REPO_NAME>", "Initializes homer."
+    def init
+      CLI.init
+      say("Initialized homer. Now `homer add` some dotfiles", :green)
+    rescue Homer::Error => e
+      say "Error: #{e.message}", :red
+    end
+
+    desc "list", "Lists your tracked dotfiles"
+    def list
+      CLI.list
+    rescue Exception => e
+      say "Error: #{e.message}", :red
+    end
+
+    desc "add NAME HOME_RELATIVE_PATH", "Start tracking a file."\
+          "eg: NAME:vimrc (This is just a nickname), HOME_RELATIVE_PATH:~/.vimrc "\
+          "to track ~/.vimrc"
+    def add(file, home_relative_path)
+      CLI.add_dotfile(file, home_relative_path.sub(Dir.home, '~'))
+    rescue Exception => e
+      say "Error: #{e.message}", :red
+    end
+
+    desc "sync", "Sync the dotfiles of current user with GitHub"
+    def sync
+      CLI.sync
+    rescue Exception => e
+      say "Error: #{e.message}", :red
+    end
+
+    desc "hi GITHUB_USERNAME DOTFILES_REPO_NAME", "Fetches dotfiles repo of Github user"
+    def hi(github_login, dotfiles_repo = 'dotfiles')
+      CLI.hi(github_login, dotfiles_repo)
+      say("Homer says hello to #{login}!", :green)
+    rescue Exception => e
+      say "Error: #{e.message}", :red
+    end
+
+    desc "bye", "Use the default user's dotfiles"
+    def bye
+      CLI.bye
+      say("Homer says hello to #{user.github_username}!", :green)
+    rescue Exception => e
+      say "Error: #{e.message}", :red
+    end
+
+    desc "eliminate GITHUB_USERNAME", "Removes a User's dotfiles directory. THIS IS DANGEROUS!"
+    def eliminate
+      puts "To be implemented"
+      return
+      #CLI.eliminate
+    rescue Exception => e
+      say "Error: #{e.message}", :red
+    end
+
   end
-
-  desc "list", "Lists your tracked dotfiles"
-  def list
-    Homer.list
-  rescue Exception => e
-    say "Error: #{e.message}", :red
-  end
-
-  desc "add NAME HOME_RELATIVE_PATH", "Start tracking a file."\
-        "eg: NAME:vimrc (This is just a nickname), HOME_RELATIVE_PATH:~/.vimrc "\
-        "to track ~/.vimrc"
-  def add(file, home_relative_path)
-    Homer.add_dotfile(file, home_relative_path.sub(Dir.home, '~'))
-  rescue Exception => e
-    say "Error: #{e.message}", :red
-  end
-
-  desc "sync", "Sync the dotfiles of current user with GitHub"
-  def sync
-    Homer.sync
-  rescue Exception => e
-    say "Error: #{e.message}", :red
-  end
-
-  desc "hi GITHUB_USERNAME DOTFILES_REPO_NAME", "Fetches dotfiles repo of Github user"
-  def hi(github_login, dotfiles_repo = 'dotfiles')
-    Homer.hi(github_login, dotfiles_repo)
-    say("Homer says hello to #{login}!", :green)
-  rescue Exception => e
-    say "Error: #{e.message}", :red
-  end
-
-  desc "bye", "Use the default user's dotfiles"
-  def bye
-    Homer.bye
-    say("Homer says hello to #{user.github_username}!", :green)
-  rescue Exception => e
-    say "Error: #{e.message}", :red
-  end
-
-  desc "eliminate GITHUB_USERNAME", "Removes a User's dotfiles directory. THIS IS DANGEROUS!"
-  def eliminate
-    puts "To be implemented"
-    return
-    #Homer.eliminate
-  rescue Exception => e
-    say "Error: #{e.message}", :red
-  end
-
 end
 
 HomerRunner.start
